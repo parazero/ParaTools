@@ -19,13 +19,25 @@ namespace GeneralTools
         public Form1()
         {
             InitializeComponent();
-            AutoMergeFlag = AutoMergecheckBox.Checked;
+            ConvertForDBcheckBox.CheckedChanged += new EventHandler(ConvertForDBCheckedChanged_Method);
+            SelectAllcheckBox.CheckedChanged += new EventHandler(SelectAllCheckedChanged_Method);
+            NumberOfColumnstoolTip.SetToolTip(NumberOfColumsQmarkspictureBox, "Number of columns in log file.\r\n" +
+                "Lines with less columns are deleted.\r\n" +
+                "Raw Files - 48, Non Raw Files - 23.\r\n" +
+                "Some versions have other column numbers. If a merged file is small please check.");
+            DirectoryNametoolTip.SetToolTip(BrowseQmarkpictureBox, "Directory name cannot contain '_' signs.");
         }
 
         private void Browsebutton_Click(object sender, EventArgs e)
         {
             int Counter = 0;
+            int FileIDStartIndex = 0;
+            int FileIDEndIndex = 0;
+            int MaxIDSize = 0;
+            int MinIDSize = 1;
+            int i = 0;
             FilesToMergecheckedListBox.Items.Clear();
+            AutoMergeFlag = AutoMergecheckBox.Checked;
             FolderBrowserDialog SelectedFolder = new FolderBrowserDialog();
             SelectedFolder.SelectedPath = "C:\\";
             DialogResult result = SelectedFolder.ShowDialog();
@@ -34,6 +46,36 @@ namespace GeneralTools
                 SelectedDirectorytextBox.Text = SelectedFolder.SelectedPath;
                 files = Directory.GetFiles(SelectedFolder.SelectedPath, "*.CSV", SearchOption.AllDirectories);
                 MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
+
+                foreach (string file in files)
+                {
+                    FileIDStartIndex = FindCharOccuranceInText(file, 1, '_');
+                    FileIDEndIndex = FindCharOccuranceInText(file, 2, '_');
+                    MaxIDSize = Math.Max(MaxIDSize, FileIDEndIndex - FileIDStartIndex - 1);
+                    MinIDSize = Math.Min(MinIDSize, FileIDEndIndex - FileIDStartIndex - 1);
+                }
+                if (!MaxIDSize.Equals(MinIDSize))
+                {
+                    foreach (string file in files)
+                    {
+                        FileIDStartIndex = FindCharOccuranceInText(file, 1, '_');
+                        FileIDEndIndex = FindCharOccuranceInText(file, 2, '_');
+                        string ZeroPad = "";
+                        if (!(FileIDEndIndex - FileIDStartIndex - 1).Equals(MaxIDSize))
+                        {
+                            string fileID = file.Substring(FileIDStartIndex, FileIDEndIndex - FileIDStartIndex - 1);
+                            
+                            for (i=0;i <MaxIDSize - (FileIDEndIndex - FileIDStartIndex-1 );i++)
+                            {
+                                ZeroPad += "0";
+                            }
+                            string NewFileName = file.Replace("_" + fileID + "_", "_" + ZeroPad + fileID + "_");
+                            File.Move(file, NewFileName);
+                        }
+                    }
+                }
+                files = Directory.GetFiles(SelectedFolder.SelectedPath, "*.CSV", SearchOption.AllDirectories);
+
                 foreach (string file in files)
                 {
                     FilesToMergecheckedListBox.Items.Add(file); // .Substring(SelectedFolder.SelectedPath.Length+1)
@@ -51,13 +93,14 @@ namespace GeneralTools
         {
             int Counter = 0;
             bool DiscardLine = false;
-            
+            string t = "";
+            AutoMergeFlag = AutoMergecheckBox.Checked;
             if (!AutoMergeFlag)
             {
                 SaveFileDialog FileToSave = new SaveFileDialog();
                 FileToSave.InitialDirectory = "C:\\";
                 FileToSave.Filter = "CSV file (*.CSV) | *.CSV | All files (*.*) | *.*";
-                FileToSave.FilterIndex = 1;
+                FileToSave.FilterIndex = 2;
                 FileToSave.RestoreDirectory = false;
                 if (FileToSave.ShowDialog() == DialogResult.OK)
                 {
@@ -84,6 +127,14 @@ namespace GeneralTools
                                     else
                                     {
                                         DiscardLine = false;
+                                        if (values.Count() > 5)
+                                        {
+                                            t = "";
+                                        }
+                                        if (!values.Count().Equals(Convert.ToInt32(NumberOfColummstextBox.Text)))
+                                        {
+                                            DiscardLine = true;
+                                        }
                                     }
                                 }
                                 else if (values.Count().Equals(2))
@@ -97,6 +148,15 @@ namespace GeneralTools
                                     else
                                     {
                                         DiscardLine = false;
+                                        if (ConvertForDBcheckBox.Checked)
+                                        {
+                                            int i = 0;
+                                            t = "";
+                                            for (i = 0; i <= Convert.ToInt32(NumberOfColummstextBox.Text); i++)
+                                            {
+                                                t += ",";
+                                            }
+                                        }
                                     }
                                 }
                                 else if (values.Count().Equals(1))
@@ -112,6 +172,10 @@ namespace GeneralTools
                                 }
                                 if (!DiscardLine)
                                 {
+                                    if (ConvertForDBcheckBox.Checked)
+                                    {
+                                        line = t + line;
+                                    }
                                     await tw.WriteLineAsync(line);
                                 }
                             }
@@ -171,6 +235,14 @@ namespace GeneralTools
                                     else
                                     {
                                         DiscardLine = false;
+                                        if (values.Count() > 5)
+                                        {
+                                            t = "";
+                                        }
+                                        if (!values.Count().Equals(Convert.ToInt32(NumberOfColummstextBox.Text)))
+                                        {
+                                            DiscardLine = true;
+                                        }
                                     }
                                 }
                                 else if (values.Count().Equals(2))
@@ -184,6 +256,15 @@ namespace GeneralTools
                                     else
                                     {
                                         DiscardLine = false;
+                                        if (ConvertForDBcheckBox.Checked)
+                                        {
+                                            int i = 0;
+                                            t = "";
+                                            for (i = 0; i <= Convert.ToInt32(NumberOfColummstextBox.Text); i++)
+                                            {
+                                                t += ",";
+                                            }
+                                        }
                                     }
                                 }
                                 else if (values.Count().Equals(1))
@@ -199,19 +280,25 @@ namespace GeneralTools
                                 }
                                 if (!DiscardLine)
                                 {
+                                    if (ConvertForDBcheckBox.Checked)
+                                    {
+                                        line = t + line;
+                                    }
                                     await tw.WriteLineAsync(line);
                                 }
                             }
                         }
                         reader.Close();
-                        if ( (Counter < FilesToMergecheckedListBox.CheckedItems.Count) && AreConsecFilesArray[Counter+1].Equals(true))
+                        if ( (Counter < FilesToMergecheckedListBox.CheckedItems.Count-1))
                         {
-                            //consecutive->Do not close File
-                        }
-                        else if ((Counter < FilesToMergecheckedListBox.CheckedItems.Count) && AreConsecFilesArray[Counter + 1].Equals(false))
-                        {
-                            //Not consecutive -> Close File
-                            tw.Close();
+                            if (AreConsecFilesArray[Counter + 1].Equals(true))//consecutive->Do not close File
+                            {
+
+                            }
+                            else if (AreConsecFilesArray[Counter + 1].Equals(false)) //Not consecutive -> Close File
+                            {
+                                tw.Close();
+                            }
                         }
                         else if (Counter.Equals(FilesToMergecheckedListBox.CheckedItems.Count))
                         {
@@ -241,6 +328,14 @@ namespace GeneralTools
                                     else
                                     {
                                         DiscardLine = false;
+                                        if (values.Count() > 5)
+                                        {
+                                            t = "";
+                                        }
+                                        if (!values.Count().Equals(Convert.ToInt32(NumberOfColummstextBox.Text)))
+                                        {
+                                            DiscardLine = true;
+                                        }
                                     }
                                 }
                                 else if (values.Count().Equals(2))
@@ -254,6 +349,15 @@ namespace GeneralTools
                                     else
                                     {
                                         DiscardLine = false;
+                                        if (ConvertForDBcheckBox.Checked)
+                                        {
+                                            int i = 0;
+                                            t = "";
+                                            for (i = 0; i <= Convert.ToInt32(NumberOfColummstextBox.Text); i++)
+                                            {
+                                                t += ",";
+                                            }
+                                        }
                                     }
                                 }
                                 else if (values.Count().Equals(1))
@@ -269,6 +373,10 @@ namespace GeneralTools
                                 }
                                 if (!DiscardLine)
                                 {
+                                    if (ConvertForDBcheckBox.Checked)
+                                    {
+                                        line = t + line;
+                                    }
                                     await tw.WriteLineAsync(line);
                                 }
                             }
@@ -345,6 +453,28 @@ namespace GeneralTools
                 Index++;
             }
             return Index+1;
+        }
+        private void ConvertForDBCheckedChanged_Method(object sender, EventArgs e)
+        {
+            if (ConvertForDBcheckBox.Checked)
+            {
+                NumberOfColumnslabel.Visible = true;
+                NumberOfColummstextBox.Visible = true;
+            }
+            else
+            {
+                //NumberOfColumnslabel.Visible = false;
+                //NumberOfColummstextBox.Visible = false;
+            }
+        }
+
+        private void SelectAllCheckedChanged_Method(object sender, EventArgs e)
+        {
+            int i = 0;
+            for (i=0;i < FilesToMergecheckedListBox.Items.Count; i++)
+            {
+                FilesToMergecheckedListBox.SetItemChecked(i, SelectAllcheckBox.Checked);
+            }
         }
     }
 }
