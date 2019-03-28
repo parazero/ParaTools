@@ -39,7 +39,16 @@ namespace GeneralTools
             FilesToMergecheckedListBox.Items.Clear();
             AutoMergeFlag = AutoMergecheckBox.Checked;
             FolderBrowserDialog SelectedFolder = new FolderBrowserDialog();
-            SelectedFolder.SelectedPath = "C:\\";
+            
+            if (SelectedDirectorytextBox.Text.Equals(""))
+            {
+                SelectedFolder.SelectedPath = "C:\\";
+            }
+            else
+            {
+                SelectedFolder.SelectedPath = SelectedDirectorytextBox.Text.Substring(0, SelectedDirectorytextBox.Text.LastIndexOf('\\'));
+            }
+
             DialogResult result = SelectedFolder.ShowDialog();
             if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(SelectedFolder.SelectedPath))
             {
@@ -98,7 +107,16 @@ namespace GeneralTools
             if (!AutoMergeFlag)
             {
                 SaveFileDialog FileToSave = new SaveFileDialog();
-                FileToSave.InitialDirectory = "C:\\";
+
+                if (SelectedDirectorytextBox.Text.Equals(""))
+                {
+                    FileToSave.InitialDirectory = "C:\\";
+                }
+                else
+                {
+                    FileToSave.InitialDirectory = SelectedDirectorytextBox.Text.Substring(0, SelectedDirectorytextBox.Text.LastIndexOf('\\'));
+                }
+
                 FileToSave.Filter = "CSV file (*.CSV) | *.CSV | All files (*.*) | *.*";
                 FileToSave.FilterIndex = 2;
                 FileToSave.RestoreDirectory = false;
