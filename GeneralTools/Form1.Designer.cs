@@ -45,14 +45,14 @@
             this.SelectedDirectorytextBox = new System.Windows.Forms.TextBox();
             this.SelectedDirectorylabel = new System.Windows.Forms.Label();
             this.UpdateConfigtabPage = new System.Windows.Forms.TabPage();
+            this.RefreshPortsbutton = new System.Windows.Forms.Button();
+            this.Progresslabel = new System.Windows.Forms.Label();
+            this.ConfigurationprogressBar = new System.Windows.Forms.ProgressBar();
+            this.Updatebutton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.SmartAirPortcomboBox = new System.Windows.Forms.ComboBox();
             this.NumberOfColumnstoolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DirectoryNametoolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.SmartAirPortcomboBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.Updatebutton = new System.Windows.Forms.Button();
-            this.ConfigurationprogressBar = new System.Windows.Forms.ProgressBar();
-            this.Progresslabel = new System.Windows.Forms.Label();
-            this.RefreshPortsbutton = new System.Windows.Forms.Button();
             this.MaintabControl.SuspendLayout();
             this.FileMergertabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumberOfColumsQmarkspictureBox)).BeginInit();
@@ -227,26 +227,31 @@
             this.UpdateConfigtabPage.TabIndex = 1;
             this.UpdateConfigtabPage.Text = "Update Configuration";
             // 
-            // NumberOfColumnstoolTip
+            // RefreshPortsbutton
             // 
-            this.NumberOfColumnstoolTip.ShowAlways = true;
+            this.RefreshPortsbutton.Location = new System.Drawing.Point(359, 31);
+            this.RefreshPortsbutton.Name = "RefreshPortsbutton";
+            this.RefreshPortsbutton.Size = new System.Drawing.Size(75, 23);
+            this.RefreshPortsbutton.TabIndex = 5;
+            this.RefreshPortsbutton.Text = "Refresh Ports";
+            this.RefreshPortsbutton.UseVisualStyleBackColor = true;
+            this.RefreshPortsbutton.Click += new System.EventHandler(this.RefreshPortsbutton_Click);
             // 
-            // SmartAirPortcomboBox
+            // Progresslabel
             // 
-            this.SmartAirPortcomboBox.FormattingEnabled = true;
-            this.SmartAirPortcomboBox.Location = new System.Drawing.Point(98, 33);
-            this.SmartAirPortcomboBox.Name = "SmartAirPortcomboBox";
-            this.SmartAirPortcomboBox.Size = new System.Drawing.Size(121, 21);
-            this.SmartAirPortcomboBox.TabIndex = 0;
+            this.Progresslabel.AutoSize = true;
+            this.Progresslabel.Location = new System.Drawing.Point(28, 72);
+            this.Progresslabel.Name = "Progresslabel";
+            this.Progresslabel.Size = new System.Drawing.Size(51, 13);
+            this.Progresslabel.TabIndex = 4;
+            this.Progresslabel.Text = "Progress:";
             // 
-            // label1
+            // ConfigurationprogressBar
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(25, 38);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Com Port:";
+            this.ConfigurationprogressBar.Location = new System.Drawing.Point(28, 91);
+            this.ConfigurationprogressBar.Name = "ConfigurationprogressBar";
+            this.ConfigurationprogressBar.Size = new System.Drawing.Size(299, 23);
+            this.ConfigurationprogressBar.TabIndex = 3;
             // 
             // Updatebutton
             // 
@@ -258,31 +263,26 @@
             this.Updatebutton.UseVisualStyleBackColor = true;
             this.Updatebutton.Click += new System.EventHandler(this.Updatebutton_Click);
             // 
-            // ConfigurationprogressBar
+            // label1
             // 
-            this.ConfigurationprogressBar.Location = new System.Drawing.Point(28, 91);
-            this.ConfigurationprogressBar.Name = "ConfigurationprogressBar";
-            this.ConfigurationprogressBar.Size = new System.Drawing.Size(299, 23);
-            this.ConfigurationprogressBar.TabIndex = 3;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(25, 38);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Com Port:";
             // 
-            // Progresslabel
+            // SmartAirPortcomboBox
             // 
-            this.Progresslabel.AutoSize = true;
-            this.Progresslabel.Location = new System.Drawing.Point(28, 72);
-            this.Progresslabel.Name = "Progresslabel";
-            this.Progresslabel.Size = new System.Drawing.Size(51, 13);
-            this.Progresslabel.TabIndex = 4;
-            this.Progresslabel.Text = "Progress:";
+            this.SmartAirPortcomboBox.FormattingEnabled = true;
+            this.SmartAirPortcomboBox.Location = new System.Drawing.Point(98, 33);
+            this.SmartAirPortcomboBox.Name = "SmartAirPortcomboBox";
+            this.SmartAirPortcomboBox.Size = new System.Drawing.Size(121, 21);
+            this.SmartAirPortcomboBox.TabIndex = 0;
             // 
-            // RefreshPortsbutton
+            // NumberOfColumnstoolTip
             // 
-            this.RefreshPortsbutton.Location = new System.Drawing.Point(359, 31);
-            this.RefreshPortsbutton.Name = "RefreshPortsbutton";
-            this.RefreshPortsbutton.Size = new System.Drawing.Size(75, 23);
-            this.RefreshPortsbutton.TabIndex = 5;
-            this.RefreshPortsbutton.Text = "Refresh Ports";
-            this.RefreshPortsbutton.UseVisualStyleBackColor = true;
-            this.RefreshPortsbutton.Click += new System.EventHandler(this.RefreshPortsbutton_Click);
+            this.NumberOfColumnstoolTip.ShowAlways = true;
             // 
             // Form1
             // 
@@ -291,7 +291,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.MaintabControl);
             this.Name = "Form1";
-            this.Text = "ParaTools V1.0.6";
+            this.Text = "ParaTools V1.0.7";
             this.MaintabControl.ResumeLayout(false);
             this.FileMergertabPage.ResumeLayout(false);
             this.FileMergertabPage.PerformLayout();

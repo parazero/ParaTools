@@ -652,14 +652,57 @@ namespace GeneralTools
 
             SetBaseValues();
 
-            MessageBox.Show("Configuration Update Ended.", "Message");
+            WriteToSmartAir("ee?");
+            Thread.Sleep(3000);
+            if (FullTextSmartAir.Contains("!IMU Configuration.......IMU: 23") &&
+                   FullTextSmartAir.Contains("!Att ROLL Lim...............................[deg]ATTR: 35.0") &&
+                   FullTextSmartAir.Contains("!Att PITCH Lim..............................[deg]ATTP: 35.0") &&
+                   FullTextSmartAir.Contains("!Angular speed threshold for critical angle.[d/s]ATTS: 100") &&
+                   FullTextSmartAir.Contains("!Angles Test Cycles...........................[n].ATC: 3") &&
+                   FullTextSmartAir.Contains("Mode....................TRG: 1") &&
+                   FullTextSmartAir.Contains("!Freefall duration...........................[ms].FFC: 300") &&
+                   FullTextSmartAir.Contains("!Freefall limit...........................[m/s^2].FFL: 4.0") &&
+                   FullTextSmartAir.Contains("!Height Test Cycles...........................[n].HTC: 5") &&
+                   FullTextSmartAir.Contains("!Delta Height Thresh..........................[m].DHT: -0.110") &&
+                   FullTextSmartAir.Contains("!Critical Delta Height Thresh.................[m]CDHT: -0.300") &&
+                   FullTextSmartAir.Contains("!RC Configuration........RCE: 0") &&
+                   FullTextSmartAir.Contains("!Attitude Rate Roll angle threshold.........[deg]ATRR: 10") &&
+                   FullTextSmartAir.Contains("!Attitude Rate Pitch angle threshold........[deg]ATRP: 10") &&
+                   FullTextSmartAir.Contains("!Angular Speed Roll/Pitch limit.........[deg/sec]ATRL: 150.0") &&
+                   FullTextSmartAir.Contains("!Angular Speed Yaw limit................[deg/sec].YRL: 180.0") &&
+                   FullTextSmartAir.Contains("!ARM/DIS 1 dur.  [100ms]ADFD: 40")
+                   && FullTextSmartAir.Contains("!Roll calibr.value.[deg].RCV: 0.0")
+                   && FullTextSmartAir.Contains("!Pitch calibr.value[deg].PCV: 0.0")
+                   && FullTextSmartAir.Contains("!ARM height..........[m].ARH: 5.0")
+                   && FullTextSmartAir.Contains("!Vibrations value.[m/s2].VIB: 0.08")
+                   && FullTextSmartAir.Contains("!No vibrations time..[s].NVI: 5")
+                   && FullTextSmartAir.Contains("!Vibrations time.....[s].VIT: 10")
+                   && FullTextSmartAir.Contains("!Auto DISARM.....[1+2+4]DISE: 2")
+                   && FullTextSmartAir.Contains("!Auto ARM..........[1+2]ARME: 3")
+                   && FullTextSmartAir.Contains("Start ARM mode..........ARM: 2")
+                   && FullTextSmartAir.Contains("!Trigger PWM on/off......PWM: 1")
+                   && FullTextSmartAir.Contains("!Trigger Delay...........MTD: 1")
+                   )
+
+            {
+                MessageBox.Show("Configuration Update Ended Successfully.", "Message");
+            }
+            else
+            {
+                MessageBox.Show("Configuration Did Not Update.", "Message");
+            }
+
+
             _serialPort.Close();
         }
 
         private void SetBaseValues()
         {
-            string[] BaseParams = {"imu","attr", "attp", "atts", "atc", "trg", "ffc", "ffl", "htc", "dht", "cdht", "rce", "atrr", "atrp", "atrl", "yrl", "adfd"};
-            string[] BaseParamsValue = {"23", "35", "35", "100", "3", "1", "300","5.8", "5", "-0.11", "-0.3", "0" , "10", "10", "150", "180", "40"};
+            string[] BaseParams = { "imu", "attr", "attp", "atts", "atc", "trg", "ffc", "ffl", "htc", "dht", "cdht", "rce",
+                "atrr", "atrp", "atrl", "yrl", "adfd", "rcv","pcv", "acv", "arh", "vib", "nvi", "vit", "dise", "arme",
+                "arm", "pwm", "mtd" };
+            string[] BaseParamsValue = { "23", "35", "35", "100", "3", "1", "300", "5.8", "5", "-0.11", "-0.3", "0", "10",
+                "10", "150", "180", "40", "0", "0", "1", "5", "0.08", "5", "10", "2", "3", "2", "1", "1" };
             InitBoardWithoutReset(BaseParams, BaseParamsValue);
             Thread.Sleep(SleepDurationAfterBoardInitMethod);
         }
@@ -675,7 +718,7 @@ namespace GeneralTools
             int Count = 0;
             foreach (string Param in Params)
             {
-                ConfigurationprogressBar.Value = Math.Min(Count+1, Params.Length);
+                ConfigurationprogressBar.Value = Math.Min(Count + 1, Params.Length);
                 LooKForParameterinEESimplified(Param.ToUpperInvariant() + ": " + ParamsValue[Count]);
                 if (!IdentifiedText)
                 {
@@ -689,7 +732,7 @@ namespace GeneralTools
                     else
                     {
                         WriteToSmartAir(Param + " " + ParamsValue[Count]);
-                       
+
                     }
                 }
                 Count++;
