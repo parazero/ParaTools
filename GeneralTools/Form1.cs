@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Curit.Module.RTX.Com;
 
 namespace GeneralTools
 {
@@ -639,6 +640,9 @@ namespace GeneralTools
         private void Updatebutton_Click(object sender, EventArgs e)
         {
             string SelectedPort = "";
+            string LocslSMAText = "";
+            string EndCondition = "";
+            bool ContinueFlash = false;
             SelectedPort = SmartAirPortcomboBox.Text;
             _serialPort.PortName = SelectedPort;
             _serialPort.BaudRate = 921600;
@@ -650,6 +654,50 @@ namespace GeneralTools
 
             _serialPort.Open();
 
+            WriteToSmartAir("trg 2");
+            WriteToSmartAir("FWU");
+            FullTextSmartAir = "";
+            WriteToSmartAir("SMA");
+
+            //_serialPort.DataReceived -= new SerialDataReceivedEventHandler(DataReceivedHandler);
+            while (!FullTextSmartAir.Contains("Waiting for the SmartAir file to be sent"))
+            {
+                FullTextSmartAir += _serialPort.ReadExisting();
+                //textBox1.Invoke(textBoxUpdateDelegate, new Object[] { textBox1, FullText, true });
+                Thread.Sleep(10);
+            }
+
+            LegacyCommunication a = new LegacyCommunication(_serialPort, true);
+            EndCondition = "FW programming completed Successfully."; // return
+            bool SMAFlashResult = a.sendBinaryFile(".\\NANO_OSR_256.bin", this, EndCondition);// return
+            //bool SMAFlashResult = true;
+            if (!SMAFlashResult)
+            {
+                //textBox1.Invoke(textBoxUpdateDelegate, new Object[] { textBox1, "SMA Flash Failed.", true });
+                ContinueFlash = false;
+                SendToSMAChars("a");
+                //SMAFlashStatuspictureBox.Image = StatusIcons._1194989231691813435led_circle_red_svg_thumb;
+                MessageBox.Show("Firmare Did Not Update.", "Message");
+            }
+            else
+            {
+                ContinueFlash = true;
+                FullTextSmartAir = "";
+                WriteToSmartAir("end");
+                //SMAFlashStatuspictureBox.Image = StatusIcons._11949892282132520602led_circle_green_svg_thumb;
+                //SMAStatus = "Passed";
+                MessageBox.Show("Firmare Was Updated successfully.", "Message");
+            }
+
+            while (!FullTextSmartAir.Contains("!Initialization.............: Finished successfully."))
+            {
+                WriteToSmartAir("end");
+                Thread.Sleep(5000);
+            }
+            WriteToSmartAir("atg");
+            Thread.Sleep(5000);
+            WriteToSmartAir("atg");
+            WriteToSmartAir("trg 1");
             SetBaseValues();
 
             WriteToSmartAir("ee?");

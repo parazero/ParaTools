@@ -291,7 +291,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.MaintabControl);
             this.Name = "Form1";
-            this.Text = "ParaTools V1.0.7";
+            this.Text = "ParaTools V1.0.8";
             this.MaintabControl.ResumeLayout(false);
             this.FileMergertabPage.ResumeLayout(false);
             this.FileMergertabPage.PerformLayout();
