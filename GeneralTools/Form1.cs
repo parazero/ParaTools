@@ -686,7 +686,7 @@ namespace GeneralTools
                 ContinueFlash = false;
                 SendToSMAChars("a");
                 //SMAFlashStatuspictureBox.Image = StatusIcons._1194989231691813435led_circle_red_svg_thumb;
-                MessageBox.Show("Firmare Did Not Update.", "Message");
+                MessageBox.Show("Firmware Did Not Update.", "Message");
             }
             else
             {
@@ -707,8 +707,9 @@ namespace GeneralTools
             Thread.Sleep(5000);
             WriteToSmartAir("atg");
             WriteToSmartAir("trg 1");
+            FullTextSmartAir = "";
             SetBaseValues();
-
+            FullTextSmartAir = "";
             WriteToSmartAir("ee?");
             Thread.Sleep(3000);
             if (FullTextSmartAir.Contains("!IMU Configuration.......IMU: 23") &&
@@ -766,7 +767,7 @@ namespace GeneralTools
                 "atrr", "atrp", "atrl", "yrl", "adfd", "rcv","pcv", "acv", "arh", "vib", "nvi", "vit", "dise", "arme",
                 "arm", "pwm", "mtd" };
             string[] BaseParamsValue = { "23", "35", "35", "100", "3", "1", "300", "5.8", "5", "-0.11", "-0.3", "0", "10",
-                "10", "150", "180", "40", "0", "0", "1", "5", "0.08", "5", "10", "2", "3", "2", "1", "1" };
+                "10", "150", "180", "40", "0.0", "0.0", "1", "5", "0.08", "5.0", "10", "2", "3", "2", "1", "1" };
             InitBoardWithoutReset(BaseParams, BaseParamsValue);
             Thread.Sleep(SleepDurationAfterBoardInitMethod);
         }
