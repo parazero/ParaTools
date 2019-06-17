@@ -642,6 +642,8 @@ namespace GeneralTools
             string SelectedPort = "";
             string LocslSMAText = "";
             string EndCondition = "";
+            string MCUID = "";
+            string FileName = "";
             bool ContinueFlash = false;
             SelectedPort = SmartAirPortcomboBox.Text;
             _serialPort.PortName = SelectedPort;
@@ -653,6 +655,13 @@ namespace GeneralTools
             _serialPort.ReadBufferSize = 500000;
 
             _serialPort.Open();
+            FullTextSmartAir = "";
+            WriteToSmartAir("ee?");
+            if (FullTextSmartAir.Contains("MCU ID.....................:"))
+            {
+                MCUID = FullTextSmartAir.Substring(FullTextSmartAir.IndexOf("MCU ID.....................:") + 29, 26);
+                MCUID = MCUID.Replace(" ", "_");
+            }
 
             WriteToSmartAir("trg 2");
             WriteToSmartAir("FWU");
@@ -686,7 +695,7 @@ namespace GeneralTools
                 WriteToSmartAir("end");
                 //SMAFlashStatuspictureBox.Image = StatusIcons._11949892282132520602led_circle_green_svg_thumb;
                 //SMAStatus = "Passed";
-                MessageBox.Show("Firmare Was Updated successfully.", "Message");
+                MessageBox.Show("Firmware Was Updated successfully.", "Message");
             }
 
             while (!FullTextSmartAir.Contains("!Initialization.............: Finished successfully."))
@@ -734,6 +743,13 @@ namespace GeneralTools
 
             {
                 MessageBox.Show("Configuration Update Ended Successfully.", "Message");
+                if (!MCUID.Equals(""))
+                {
+                    //Directory.CreateDirectory(Sorucepath + "\\FlashLog\\"); //+ MCUID + "\\" + DateTime.UtcNow.Year.ToString() + "-" + DateTime.UtcNow.Month.ToString() + "-" + DateTime.UtcNow.Day.ToString() + "\\"
+                    FileName = MCUID + ".txt";//Path.GetTempFileName();
+                    FileStream fs = File.Open(FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+                    fs.Close();
+                }
             }
             else
             {
