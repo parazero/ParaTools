@@ -695,7 +695,7 @@ namespace GeneralTools
                 WriteToSmartAir("end");
                 //SMAFlashStatuspictureBox.Image = StatusIcons._11949892282132520602led_circle_green_svg_thumb;
                 //SMAStatus = "Passed";
-                MessageBox.Show("Firmware Was Updated successfully.", "Message");
+                //MessageBox.Show("Firmware Was Updated successfully.", "Message");
             }
 
             while (!FullTextSmartAir.Contains("!Initialization.............: Finished successfully."))
@@ -703,6 +703,27 @@ namespace GeneralTools
                 WriteToSmartAir("end");
                 Thread.Sleep(5000);
             }
+            FullTextSmartAir = "";
+            WriteToSmartAir("eee");
+            WriteToSmartAir("rst");
+            while (!FullTextSmartAir.Contains("!Initialization.............: Finished successfully.") && (!FullTextSmartAir.Contains("!Incorrect orientation......:")))
+            {
+                if ((_serialPort.BytesToRead > 0) )
+                {
+                    string indata = _serialPort.ReadExisting();
+                    if (!indata.Equals(""))
+                    {
+                        //Console.WriteLine(indata);
+                        FullTextSmartAir += indata;
+                    }
+                    else
+                    {
+                        Thread.Sleep(250);
+                    }
+                }
+                Thread.Sleep(5000);
+            }
+            WriteToSmartAir("trg 2");
             WriteToSmartAir("atg");
             Thread.Sleep(5000);
             WriteToSmartAir("atg");
