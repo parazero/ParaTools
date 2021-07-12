@@ -53,17 +53,24 @@
             this.SmartAirPortcomboBox = new System.Windows.Forms.ComboBox();
             this.NumberOfColumnstoolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DirectoryNametoolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.fileNameTextBox = new System.Windows.Forms.TextBox();
+            this.selectBinFile = new System.Windows.Forms.Button();
+            this.encryptBinFile = new System.Windows.Forms.Button();
+            this.outputTextBox = new System.Windows.Forms.TextBox();
             this.MaintabControl.SuspendLayout();
             this.FileMergertabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumberOfColumsQmarkspictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BrowseQmarkpictureBox)).BeginInit();
             this.UpdateConfigtabPage.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MaintabControl
             // 
             this.MaintabControl.Controls.Add(this.FileMergertabPage);
             this.MaintabControl.Controls.Add(this.UpdateConfigtabPage);
+            this.MaintabControl.Controls.Add(this.tabPage1);
             this.MaintabControl.Location = new System.Drawing.Point(38, 13);
             this.MaintabControl.Name = "MaintabControl";
             this.MaintabControl.SelectedIndex = 0;
@@ -284,6 +291,58 @@
             // 
             this.NumberOfColumnstoolTip.ShowAlways = true;
             // 
+            // tabPage1
+            // 
+            this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.outputTextBox);
+            this.tabPage1.Controls.Add(this.encryptBinFile);
+            this.tabPage1.Controls.Add(this.selectBinFile);
+            this.tabPage1.Controls.Add(this.fileNameTextBox);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(725, 373);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Version Encryptor";
+            // 
+            // fileNameTextBox
+            // 
+            this.fileNameTextBox.Location = new System.Drawing.Point(28, 42);
+            this.fileNameTextBox.Name = "fileNameTextBox";
+            this.fileNameTextBox.ReadOnly = true;
+            this.fileNameTextBox.Size = new System.Drawing.Size(640, 20);
+            this.fileNameTextBox.TabIndex = 0;
+            // 
+            // selectBinFile
+            // 
+            this.selectBinFile.Location = new System.Drawing.Point(28, 107);
+            this.selectBinFile.Name = "selectBinFile";
+            this.selectBinFile.Size = new System.Drawing.Size(75, 23);
+            this.selectBinFile.TabIndex = 1;
+            this.selectBinFile.Text = "Select File";
+            this.selectBinFile.UseVisualStyleBackColor = true;
+            this.selectBinFile.Click += new System.EventHandler(this.selectBinFile_Click);
+            // 
+            // encryptBinFile
+            // 
+            this.encryptBinFile.Location = new System.Drawing.Point(160, 106);
+            this.encryptBinFile.Name = "encryptBinFile";
+            this.encryptBinFile.Size = new System.Drawing.Size(75, 23);
+            this.encryptBinFile.TabIndex = 2;
+            this.encryptBinFile.Text = "Encrypt";
+            this.encryptBinFile.UseVisualStyleBackColor = true;
+            this.encryptBinFile.Click += new System.EventHandler(this.encryptBinFile_Click);
+            // 
+            // outputTextBox
+            // 
+            this.outputTextBox.Location = new System.Drawing.Point(28, 168);
+            this.outputTextBox.Multiline = true;
+            this.outputTextBox.Name = "outputTextBox";
+            this.outputTextBox.ReadOnly = true;
+            this.outputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.outputTextBox.Size = new System.Drawing.Size(640, 160);
+            this.outputTextBox.TabIndex = 3;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -299,6 +358,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.BrowseQmarkpictureBox)).EndInit();
             this.UpdateConfigtabPage.ResumeLayout(false);
             this.UpdateConfigtabPage.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -328,6 +389,11 @@
         private System.Windows.Forms.Label Progresslabel;
         private System.Windows.Forms.ProgressBar ConfigurationprogressBar;
         private System.Windows.Forms.Button RefreshPortsbutton;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Button encryptBinFile;
+        private System.Windows.Forms.Button selectBinFile;
+        private System.Windows.Forms.TextBox fileNameTextBox;
+        private System.Windows.Forms.TextBox outputTextBox;
     }
 }
 
