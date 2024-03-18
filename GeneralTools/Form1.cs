@@ -16,10 +16,12 @@ using Curit.Module.RTX.Com;
 using System.Runtime.InteropServices;
 using ParaZero.SmartAirInfra;
 using ParaZero.KalmanInfra;
+using ParaZero.SerialCommInfra;
 using ParaZero.GeometryInfra;
 using ParaZero.StatisticsInfra;
 using static System.Windows.Forms.ListView;
 using System.Windows.Forms.DataVisualization.Charting;
+using static ParaZero.SerialCommInfra.SerialCommPort;
 
 namespace GeneralTools
 {
@@ -30,9 +32,12 @@ namespace GeneralTools
         TextWriter tw;
         SerialPort _serialPort;
         List<string> ParamsThatCauseReset = new List<string> { "arm", "usd", "imu" };
+        List<string> logFiles = new List<string> { };
         int SleepDurationAfterBoardInitMethod = 4500;
+
         bool IdentifiedText = false;
         bool WaitForInit = false;
+        bool isFileImportInProgress = false;
 
         private bool EEFinished = false;
         private bool TestTimeout = false;
@@ -42,10 +47,17 @@ namespace GeneralTools
 
         string shortFileName = "";
         string selectedFolder = "";
+        string selectedUnitType = "";
 
         int DoubleClickCounter = 0;
         int FirstXPos = 0;
         int SecondXPos = 0;
+
+        int currentSizeImportedFile = 0;
+        int logSizeImportedFile = 0;
+        int selectedStorageType = 0;
+        int selectedIndexFromDelegate = 0;
+        bool eofReached = false;
 
         List<string> AHRSPitch = new List<string>();
         List<string> AHRSRoll = new List<string>();
@@ -55,9 +67,28 @@ namespace GeneralTools
 
         SmartAirLogRepresentaion LogFile = new SmartAirLogRepresentaion();
 
+        SerialCommPort ESPort;
+        FolderBrowserDialog selectedFolderForLogs;
+
+        public delegate void AddDataDelegate(TextBox TextboxToUpdate, String myString, bool AppendOrReplace);
+        public AddDataDelegate textBoxUpdateDelegate;
+
+        public delegate void UpdateLabelDelegate(Label LabelToUpdate, String myString, bool AppendOrReplace);
+        public UpdateLabelDelegate LabelToUpdateDelegate;
+
+        public delegate void ReadComboBoxIndexDelegate(ComboBox comboBoxToRead);
+        public ReadComboBoxIndexDelegate readComboBoxIndexDelegate;
+
+        BackgroundWorker logImportWorker = new BackgroundWorker();
+
         public Form1()
         {
             InitializeComponent();
+            textBoxUpdateDelegate = new AddDataDelegate(AddTextTotextBoxMethod);
+            LabelToUpdateDelegate = new UpdateLabelDelegate(UpdateLabeltextMethod);
+            readComboBoxIndexDelegate = new ReadComboBoxIndexDelegate(getComboBoxIndexMethod);
+            logImportWorker.DoWork += new DoWorkEventHandler(logImportWorker_DoWork);
+
             chart1.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart1.MouseMove += new MouseEventHandler(MouseHover_HitTest);
             chart1.MouseDoubleClick += new MouseEventHandler(MouseDoubleClick_Test);
@@ -77,6 +108,10 @@ namespace GeneralTools
             LocalAHRSIMU._sampleRate = 1.0f / 10;
             LocalAHRSIMU.Inclination = 3.5f;
 
+            ESsapTypecomboBox.SelectedIndex = 2;
+            ESStorageTypecomboBox.SelectedIndex = 1;
+
+
             _serialPort = new SerialPort();
             // Allow the user to set the appropriate properties.
             foreach (string s in SerialPort.GetPortNames())
@@ -84,6 +119,11 @@ namespace GeneralTools
                 SmartAirPortcomboBox.Items.Add(s);
             }
         }
+
+        //private DoWorkEventHandler DoWorkEventHandler(Action<object, DoWorkEventArgs> logImportWorker_DoWork)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private void Browsebutton_Click(object sender, EventArgs e)
         {
@@ -730,165 +770,165 @@ namespace GeneralTools
                 var line = reader.ReadLine();
                 if (!line.Equals(""))
                 {
-                    WriteToSmartAir(line.Replace("\t"," "));
+                    WriteToSmartAir(line.Replace("\t", " "));
                     //Thread.Sleep(3500);
                 }
             }
 
-                    //WriteToSmartAir("ee?");
-                    ////byte[] aaa = new byte[11];
-                    ////aaa[0] = 0xB5;
-                    ////aaa[1] = 0x62;
-                    ////aaa[2] = 0x06;
-                    ////aaa[3] = 0x01;
-                    ////aaa[4] = 0x03;
-                    ////aaa[5] = 0x00;
-                    ////aaa[6] = 0x01;
-                    ////aaa[7] = 0x06;
-                    ////aaa[8] = 0x01;
+            //WriteToSmartAir("ee?");
+            ////byte[] aaa = new byte[11];
+            ////aaa[0] = 0xB5;
+            ////aaa[1] = 0x62;
+            ////aaa[2] = 0x06;
+            ////aaa[3] = 0x01;
+            ////aaa[4] = 0x03;
+            ////aaa[5] = 0x00;
+            ////aaa[6] = 0x01;
+            ////aaa[7] = 0x06;
+            ////aaa[8] = 0x01;
 
-                    ////byte CK_A = 0, CK_B = 0;
-                    ////for (int I = 2; I < 6; I++)
-                    ////{
-                    ////    CK_A = CK_A + aaa[I];
-                    ////    CK_B = CK_B + CK_A;
-                    ////}
+            ////byte CK_A = 0, CK_B = 0;
+            ////for (int I = 2; I < 6; I++)
+            ////{
+            ////    CK_A = CK_A + aaa[I];
+            ////    CK_B = CK_B + CK_A;
+            ////}
 
-                    ////aaa[9] = 0x16;
-                    ////aaa[10] = 0x75;
-                    ////_serialPort.Write(aaa, 0, 11);
-                    ////WriteToSmartAir("$PUBX,41,1,0023,0001,115200,0*1C\r\n");
-                    ////WriteToSmartAir("$JATT,NMEAHE,0\r\n$JASC,GPGGA,5\r\n$JASC,GPRMC,5\r\n$JASC,GPVTG,5\r\n$JASC,GPHDT,5\r\n$JMODE,SBASR,YES\r\n");
-                    //FullTextSmartAir = "";
-                    ////while (true)
-                    ////{
-                    ////    FullTextSmartAir += _serialPort.ReadExisting();
-                    ////    Thread.Sleep(10);
-                    ////    FullTextSmartAir = "";
-                    ////}
-                    //if (FullTextSmartAir.Contains("MCU ID.....................:"))
-                    //{
-                    //    MCUID = FullTextSmartAir.Substring(FullTextSmartAir.IndexOf("MCU ID.....................:") + 29, 26);
-                    //    MCUID = MCUID.Replace(" ", "_");
-                    //}
+            ////aaa[9] = 0x16;
+            ////aaa[10] = 0x75;
+            ////_serialPort.Write(aaa, 0, 11);
+            ////WriteToSmartAir("$PUBX,41,1,0023,0001,115200,0*1C\r\n");
+            ////WriteToSmartAir("$JATT,NMEAHE,0\r\n$JASC,GPGGA,5\r\n$JASC,GPRMC,5\r\n$JASC,GPVTG,5\r\n$JASC,GPHDT,5\r\n$JMODE,SBASR,YES\r\n");
+            //FullTextSmartAir = "";
+            ////while (true)
+            ////{
+            ////    FullTextSmartAir += _serialPort.ReadExisting();
+            ////    Thread.Sleep(10);
+            ////    FullTextSmartAir = "";
+            ////}
+            //if (FullTextSmartAir.Contains("MCU ID.....................:"))
+            //{
+            //    MCUID = FullTextSmartAir.Substring(FullTextSmartAir.IndexOf("MCU ID.....................:") + 29, 26);
+            //    MCUID = MCUID.Replace(" ", "_");
+            //}
 
-                    //WriteToSmartAir("trg 2");
-                    //WriteToSmartAir("FWU");
-                    //FullTextSmartAir = "";
-                    //WriteToSmartAir("SMA");
+            //WriteToSmartAir("trg 2");
+            //WriteToSmartAir("FWU");
+            //FullTextSmartAir = "";
+            //WriteToSmartAir("SMA");
 
-                    ////_serialPort.DataReceived -= new SerialDataReceivedEventHandler(DataReceivedHandler);
-                    //while (!FullTextSmartAir.Contains("Waiting for the SmartAir file to be sent"))
-                    //{
-                    //    FullTextSmartAir += _serialPort.ReadExisting();
-                    //    //textBox1.Invoke(textBoxUpdateDelegate, new Object[] { textBox1, FullText, true });
-                    //    Thread.Sleep(10);
-                    //}
+            ////_serialPort.DataReceived -= new SerialDataReceivedEventHandler(DataReceivedHandler);
+            //while (!FullTextSmartAir.Contains("Waiting for the SmartAir file to be sent"))
+            //{
+            //    FullTextSmartAir += _serialPort.ReadExisting();
+            //    //textBox1.Invoke(textBoxUpdateDelegate, new Object[] { textBox1, FullText, true });
+            //    Thread.Sleep(10);
+            //}
 
-                    //LegacyCommunication a = new LegacyCommunication(_serialPort, true);
-                    //EndCondition = "FW programming completed Successfully."; // return
-                    //bool SMAFlashResult = a.sendBinaryFile(".\\NANO_OSR_256.bin", this, EndCondition);// return
-                    ////bool SMAFlashResult = true;
-                    //if (!SMAFlashResult)
-                    //{
-                    //    //textBox1.Invoke(textBoxUpdateDelegate, new Object[] { textBox1, "SMA Flash Failed.", true });
-                    //    ContinueFlash = false;
-                    //    SendToSMAChars("a");
-                    //    //SMAFlashStatuspictureBox.Image = StatusIcons._1194989231691813435led_circle_red_svg_thumb;
-                    //    MessageBox.Show("Firmware Did Not Update.", "Message");
-                    //}
-                    //else
-                    //{
-                    //    ContinueFlash = true;
-                    //    FullTextSmartAir = "";
-                    //    WriteToSmartAir("end");
-                    //    //SMAFlashStatuspictureBox.Image = StatusIcons._11949892282132520602led_circle_green_svg_thumb;
-                    //    //SMAStatus = "Passed";
-                    //    //MessageBox.Show("Firmware Was Updated successfully.", "Message");
-                    //}
+            //LegacyCommunication a = new LegacyCommunication(_serialPort, true);
+            //EndCondition = "FW programming completed Successfully."; // return
+            //bool SMAFlashResult = a.sendBinaryFile(".\\NANO_OSR_256.bin", this, EndCondition);// return
+            ////bool SMAFlashResult = true;
+            //if (!SMAFlashResult)
+            //{
+            //    //textBox1.Invoke(textBoxUpdateDelegate, new Object[] { textBox1, "SMA Flash Failed.", true });
+            //    ContinueFlash = false;
+            //    SendToSMAChars("a");
+            //    //SMAFlashStatuspictureBox.Image = StatusIcons._1194989231691813435led_circle_red_svg_thumb;
+            //    MessageBox.Show("Firmware Did Not Update.", "Message");
+            //}
+            //else
+            //{
+            //    ContinueFlash = true;
+            //    FullTextSmartAir = "";
+            //    WriteToSmartAir("end");
+            //    //SMAFlashStatuspictureBox.Image = StatusIcons._11949892282132520602led_circle_green_svg_thumb;
+            //    //SMAStatus = "Passed";
+            //    //MessageBox.Show("Firmware Was Updated successfully.", "Message");
+            //}
 
-                    //while (!FullTextSmartAir.Contains("!Initialization.............: Finished successfully."))
-                    //{
-                    //    WriteToSmartAir("end");
-                    //    Thread.Sleep(5000);
-                    //}
-                    //FullTextSmartAir = "";
-                    //WriteToSmartAir("eee");
-                    //WriteToSmartAir("rst");
-                    //while (!FullTextSmartAir.Contains("!Initialization.............: Finished successfully.") && (!FullTextSmartAir.Contains("!Incorrect orientation......:")))
-                    //{
-                    //    if ((_serialPort.BytesToRead > 0))
-                    //    {
-                    //        string indata = _serialPort.ReadExisting();
-                    //        if (!indata.Equals(""))
-                    //        {
-                    //            //Console.WriteLine(indata);
-                    //            FullTextSmartAir += indata;
-                    //        }
-                    //        else
-                    //        {
-                    //            Thread.Sleep(250);
-                    //        }
-                    //    }
-                    //    Thread.Sleep(5000);
-                    //}
-                    //WriteToSmartAir("trg 2");
-                    //WriteToSmartAir("atg");
-                    //Thread.Sleep(5000);
-                    //WriteToSmartAir("atg");
-                    //WriteToSmartAir("trg 1");
-                    //FullTextSmartAir = "";
-                    //SetBaseValues();
-                    //FullTextSmartAir = "";
-                    //WriteToSmartAir("ee?");
-                    //Thread.Sleep(3000);
-                    //if (FullTextSmartAir.Contains("!IMU Configuration.......IMU: 23") &&
-                    //       FullTextSmartAir.Contains("!Att ROLL Lim...............................[deg]ATTR: 35.0") &&
-                    //       FullTextSmartAir.Contains("!Att PITCH Lim..............................[deg]ATTP: 35.0") &&
-                    //       FullTextSmartAir.Contains("!Angular speed threshold for critical angle.[d/s]ATTS: 100") &&
-                    //       FullTextSmartAir.Contains("!Angles Test Cycles...........................[n].ATC: 3") &&
-                    //       FullTextSmartAir.Contains("Mode....................TRG: 1") &&
-                    //       FullTextSmartAir.Contains("!Freefall duration...........................[ms].FFC: 300") &&
-                    //       FullTextSmartAir.Contains("!Freefall limit...........................[m/s^2].FFL: 4.0") &&
-                    //       FullTextSmartAir.Contains("!Height Test Cycles...........................[n].HTC: 5") &&
-                    //       FullTextSmartAir.Contains("!Delta Height Thresh..........................[m].DHT: -0.110") &&
-                    //       FullTextSmartAir.Contains("!Critical Delta Height Thresh.................[m]CDHT: -0.300") &&
-                    //       FullTextSmartAir.Contains("!RC Configuration........RCE: 0") &&
-                    //       FullTextSmartAir.Contains("!Attitude Rate Roll angle threshold.........[deg]ATRR: 10") &&
-                    //       FullTextSmartAir.Contains("!Attitude Rate Pitch angle threshold........[deg]ATRP: 10") &&
-                    //       FullTextSmartAir.Contains("!Angular Speed Roll/Pitch limit.........[deg/sec]ATRL: 150.0") &&
-                    //       FullTextSmartAir.Contains("!Angular Speed Yaw limit................[deg/sec].YRL: 180.0") &&
-                    //       FullTextSmartAir.Contains("!ARM/DIS 1 dur.  [100ms]ADFD: 40")
-                    //       && FullTextSmartAir.Contains("!Roll calibr.value.[deg].RCV: 0.0")
-                    //       && FullTextSmartAir.Contains("!Pitch calibr.value[deg].PCV: 0.0")
-                    //       && FullTextSmartAir.Contains("!ARM height..........[m].ARH: 5.0")
-                    //       && FullTextSmartAir.Contains("!Vibrations value.[m/s2].VIB: 0.08")
-                    //       && FullTextSmartAir.Contains("!No vibrations time..[s].NVI: 5")
-                    //       && FullTextSmartAir.Contains("!Vibrations time.....[s].VIT: 10")
-                    //       && FullTextSmartAir.Contains("!Auto DISARM.....[1+2+4]DISE: 2")
-                    //       && FullTextSmartAir.Contains("!Auto ARM..........[1+2]ARME: 3")
-                    //       && FullTextSmartAir.Contains("Start ARM mode..........ARM: 2")
-                    //       && FullTextSmartAir.Contains("!Trigger PWM on/off......PWM: 1")
-                    //       && FullTextSmartAir.Contains("!Trigger Delay...........MTD: 1")
-                    //       )
+            //while (!FullTextSmartAir.Contains("!Initialization.............: Finished successfully."))
+            //{
+            //    WriteToSmartAir("end");
+            //    Thread.Sleep(5000);
+            //}
+            //FullTextSmartAir = "";
+            //WriteToSmartAir("eee");
+            //WriteToSmartAir("rst");
+            //while (!FullTextSmartAir.Contains("!Initialization.............: Finished successfully.") && (!FullTextSmartAir.Contains("!Incorrect orientation......:")))
+            //{
+            //    if ((_serialPort.BytesToRead > 0))
+            //    {
+            //        string indata = _serialPort.ReadExisting();
+            //        if (!indata.Equals(""))
+            //        {
+            //            //Console.WriteLine(indata);
+            //            FullTextSmartAir += indata;
+            //        }
+            //        else
+            //        {
+            //            Thread.Sleep(250);
+            //        }
+            //    }
+            //    Thread.Sleep(5000);
+            //}
+            //WriteToSmartAir("trg 2");
+            //WriteToSmartAir("atg");
+            //Thread.Sleep(5000);
+            //WriteToSmartAir("atg");
+            //WriteToSmartAir("trg 1");
+            //FullTextSmartAir = "";
+            //SetBaseValues();
+            //FullTextSmartAir = "";
+            //WriteToSmartAir("ee?");
+            //Thread.Sleep(3000);
+            //if (FullTextSmartAir.Contains("!IMU Configuration.......IMU: 23") &&
+            //       FullTextSmartAir.Contains("!Att ROLL Lim...............................[deg]ATTR: 35.0") &&
+            //       FullTextSmartAir.Contains("!Att PITCH Lim..............................[deg]ATTP: 35.0") &&
+            //       FullTextSmartAir.Contains("!Angular speed threshold for critical angle.[d/s]ATTS: 100") &&
+            //       FullTextSmartAir.Contains("!Angles Test Cycles...........................[n].ATC: 3") &&
+            //       FullTextSmartAir.Contains("Mode....................TRG: 1") &&
+            //       FullTextSmartAir.Contains("!Freefall duration...........................[ms].FFC: 300") &&
+            //       FullTextSmartAir.Contains("!Freefall limit...........................[m/s^2].FFL: 4.0") &&
+            //       FullTextSmartAir.Contains("!Height Test Cycles...........................[n].HTC: 5") &&
+            //       FullTextSmartAir.Contains("!Delta Height Thresh..........................[m].DHT: -0.110") &&
+            //       FullTextSmartAir.Contains("!Critical Delta Height Thresh.................[m]CDHT: -0.300") &&
+            //       FullTextSmartAir.Contains("!RC Configuration........RCE: 0") &&
+            //       FullTextSmartAir.Contains("!Attitude Rate Roll angle threshold.........[deg]ATRR: 10") &&
+            //       FullTextSmartAir.Contains("!Attitude Rate Pitch angle threshold........[deg]ATRP: 10") &&
+            //       FullTextSmartAir.Contains("!Angular Speed Roll/Pitch limit.........[deg/sec]ATRL: 150.0") &&
+            //       FullTextSmartAir.Contains("!Angular Speed Yaw limit................[deg/sec].YRL: 180.0") &&
+            //       FullTextSmartAir.Contains("!ARM/DIS 1 dur.  [100ms]ADFD: 40")
+            //       && FullTextSmartAir.Contains("!Roll calibr.value.[deg].RCV: 0.0")
+            //       && FullTextSmartAir.Contains("!Pitch calibr.value[deg].PCV: 0.0")
+            //       && FullTextSmartAir.Contains("!ARM height..........[m].ARH: 5.0")
+            //       && FullTextSmartAir.Contains("!Vibrations value.[m/s2].VIB: 0.08")
+            //       && FullTextSmartAir.Contains("!No vibrations time..[s].NVI: 5")
+            //       && FullTextSmartAir.Contains("!Vibrations time.....[s].VIT: 10")
+            //       && FullTextSmartAir.Contains("!Auto DISARM.....[1+2+4]DISE: 2")
+            //       && FullTextSmartAir.Contains("!Auto ARM..........[1+2]ARME: 3")
+            //       && FullTextSmartAir.Contains("Start ARM mode..........ARM: 2")
+            //       && FullTextSmartAir.Contains("!Trigger PWM on/off......PWM: 1")
+            //       && FullTextSmartAir.Contains("!Trigger Delay...........MTD: 1")
+            //       )
 
-                    //{
-                    //    MessageBox.Show("Configuration Update Ended Successfully.", "Message");
-                    //    if (!MCUID.Equals(""))
-                    //    {
-                    //        //Directory.CreateDirectory(Sorucepath + "\\FlashLog\\"); //+ MCUID + "\\" + DateTime.UtcNow.Year.ToString() + "-" + DateTime.UtcNow.Month.ToString() + "-" + DateTime.UtcNow.Day.ToString() + "\\"
-                    //        FileName = MCUID + ".txt";//Path.GetTempFileName();
-                    //        FileStream fs = File.Open(FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-                    //        fs.Close();
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    MessageBox.Show("Configuration Did Not Update.", "Message");
-                    //}
+            //{
+            //    MessageBox.Show("Configuration Update Ended Successfully.", "Message");
+            //    if (!MCUID.Equals(""))
+            //    {
+            //        //Directory.CreateDirectory(Sorucepath + "\\FlashLog\\"); //+ MCUID + "\\" + DateTime.UtcNow.Year.ToString() + "-" + DateTime.UtcNow.Month.ToString() + "-" + DateTime.UtcNow.Day.ToString() + "\\"
+            //        FileName = MCUID + ".txt";//Path.GetTempFileName();
+            //        FileStream fs = File.Open(FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+            //        fs.Close();
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Configuration Did Not Update.", "Message");
+            //}
 
 
-                    _serialPort.Close();
+            _serialPort.Close();
         }
 
         private void SetBaseValues()
@@ -1344,6 +1384,355 @@ namespace GeneralTools
             FirstXPos = 0;
             SecondXPos = 0;
             MLNumOfPointstextBox.Text = DoubleClickCounter.ToString();
+        }
+
+        private void ESPortRefreshbutton_Click(object sender, EventArgs e)
+        {
+            ESPortcomboBox.Items.Clear();
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                ESPortcomboBox.Items.Add(s);
+            }
+        }
+
+        private void ESPortcomboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ESPortOpenButton_Click(object sender, EventArgs e)
+        {
+            string SelectedPort = "";
+
+            SelectedPort = ESPortcomboBox.Text;
+            //_serialPort.PortName = SelectedPort;
+            //_serialPort.BaudRate = 921600;//115200;//
+            //_serialPort.Parity = 0;
+            //_serialPort.DataBits = 8;
+            //_serialPort.StopBits = (StopBits)1;
+            //_serialPort.Handshake = 0;
+            //_serialPort.ReadBufferSize = 500000;
+            ESPort = new SerialCommPort(SelectedPort, 921600, Parity.None, 8, StopBits.One, Handshake.None, 5000000);
+            ESPort.SleepAfterWriteLineEvent = 1000;
+
+            ESPort.OpenSerialCommPort();
+
+
+            ESPort.SafeAirTextChanged += new SafeAirTextChangedHandler(SafeAirTextChangedHandler);
+        }
+
+        private void SafeAirTextChangedHandler(object sender, SafeAirTextEventArgs e)
+        {
+            try
+            {
+                int a = 1;
+                string localText = ESPort._FullText.Replace("\u001b[39m", "");
+                localText = localText.Replace("\u001b[38m", "");
+                localText = localText.Replace("\u001b[37m", "");
+                localText = localText.Replace("\u001b[36m", "");
+                localText = localText.Replace("\u001b[35m", "");
+                localText = localText.Replace("\u001b[34m", "");
+                localText = localText.Replace("\u001b[33m", "");
+                localText = localText.Replace("\u001b[32m", "");
+                localText = localText.Replace("\u001b[31m", "");
+                localText = localText.Replace("\u001b[30m", "");
+
+                if (!isFileImportInProgress)
+                {
+                    FullTextSmartAir += localText;
+                    ESPorttextBox.Invoke(textBoxUpdateDelegate, new Object[] { ESPorttextBox, localText, true });
+                    if (FullTextSmartAir.Length > 0)
+                    {
+                        parseSafeAirMessage();
+                    }
+                }
+                else
+                {
+                    currentSizeImportedFile += localText.Length;
+                    if (localText.Contains("Buffer size is 0"))
+                    {
+                        localText = localText.Replace("Buffer size is 0", "");
+                    }
+                    if (localText.Contains("EOF"))
+                    {
+                        localText = localText.Replace("EOF", "");
+                        tw.Write(localText);
+                        eofReached = true;
+                    }
+                    else
+                    {
+                        tw.Write(localText);
+                    }
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void ESunLockbutton_Click(object sender, EventArgs e)
+        {
+            string unitType = ESsapTypecomboBox.SelectedItem.ToString();
+
+            if (unitType.Equals("Bare Metal"))
+            {
+                ESPort.WriteToPort("EPW \"PARAZERO@DOVHOZ#30\"");
+            }
+            else if (unitType.Equals("RTOS 6.01"))
+            {
+                ESPort.WriteToPort("epw \"PARAZERO@DOVHOZ#30\"");
+            }
+            else if (unitType.Equals("RTOS +6.02"))
+            {
+                ESPort.WriteToPort("epw \"PARAZERO@DOVHOZ#RTOS\"");
+            }
+        }
+
+        public void AddTextTotextBoxMethod(TextBox TextboxToUpdate, String myString, bool AppendOrReplace)
+        {
+            if (AppendOrReplace)
+            {
+                TextboxToUpdate.AppendText(myString);
+            }
+            else
+            {
+                TextboxToUpdate.Text = myString;
+            }
+        }
+
+        public void UpdateLabeltextMethod(Label LabelToUpdate, String myString, bool AppendOrReplace)
+        {
+            LabelToUpdate.Text = myString;
+        }
+
+        public void getComboBoxIndexMethod(ComboBox comboBoxToRead)
+        {
+            selectedIndexFromDelegate = (comboBoxToRead.SelectedIndex);
+        }
+
+        private void ESResetbutton_Click(object sender, EventArgs e)
+        {
+            string unitType = ESsapTypecomboBox.SelectedItem.ToString();
+
+            if (unitType.Equals("Bare Metal"))
+            {
+                ESPort.WriteToPort("rst");
+            }
+            else if (unitType.Equals("RTOS 6.01"))
+            {
+                ESPort.WriteToPort("reset");
+            }
+            else if (unitType.Equals("RTOS +6.02"))
+            {
+                ESPort.WriteToPort("reset");
+            }
+        }
+
+        private void ESArmDisarmbutton_Click(object sender, EventArgs e)
+        {
+            string unitType = ESsapTypecomboBox.SelectedItem.ToString();
+
+            if (unitType.Equals("Bare Metal"))
+            {
+                ESPort.WriteToPort("atg");
+            }
+            else if (unitType.Equals("RTOS 6.01"))
+            {
+                ESPort.WriteToPort("atg");
+            }
+            else if (unitType.Equals("RTOS +6.02"))
+            {
+                ESPort.WriteToPort("atg");
+            }
+        }
+
+        private void ESStorageStatusbutton_Click(object sender, EventArgs e)
+        {
+            string unitType = ESsapTypecomboBox.SelectedItem.ToString();
+
+            if (unitType.Equals("Bare Metal"))
+            {
+                ESPort.WriteToPort("dir");
+            }
+            else if (unitType.Equals("RTOS 6.01"))
+            {
+                if (ESStorageTypecomboBox.SelectedIndex.Equals(1))
+                {
+                    ESPort.WriteToPort("dir 1");
+                }
+                else if (ESStorageTypecomboBox.SelectedIndex.Equals(0))
+                {
+                    ESPort.WriteToPort("dir 0");
+                }
+            }
+            else if (unitType.Equals("RTOS +6.02"))
+            {
+                if (ESStorageTypecomboBox.SelectedIndex.Equals(1))
+                {
+                    ESPort.WriteToPort("dir 1");
+                }
+                else if (ESStorageTypecomboBox.SelectedIndex.Equals(0))
+                {
+                    ESPort.WriteToPort("dir 0");
+                }
+            }
+        }
+
+        private void parseSafeAirMessage()
+        {
+            while (FullTextSmartAir.Length > 0)
+            {
+                if (FullTextSmartAir.Contains("!Storage free space..........:") && FullTextSmartAir.Contains("MB"))
+                {
+                    int storageIndex = FullTextSmartAir.IndexOf("!Storage free space");
+                    int firstMBIndex = FullTextSmartAir.IndexOf("MB", storageIndex);
+                    int lastMBIndex = FullTextSmartAir.IndexOf("MB", firstMBIndex + 1);
+                    int firstSeperatorIndex = FullTextSmartAir.IndexOf(":", storageIndex);
+                    int lastSeperatorIndex = FullTextSmartAir.IndexOf(":", firstSeperatorIndex + 1);
+                    if (!firstMBIndex.Equals(lastMBIndex))
+                    {
+                        string stroageFreeSpace = FullTextSmartAir.Substring(firstSeperatorIndex + 1, firstMBIndex - firstSeperatorIndex - 1).Replace(" ", "");
+                        string storageTotalSpace = FullTextSmartAir.Substring(lastSeperatorIndex + 1, lastMBIndex - lastSeperatorIndex - 1).Replace(" ", "");
+                        float storageFreePercentage = float.Parse(stroageFreeSpace) / float.Parse(storageTotalSpace);
+                        ESStorageTypecomboBox.Invoke(readComboBoxIndexDelegate, new Object[] { ESStorageTypecomboBox });
+                        if (selectedIndexFromDelegate.Equals(1))
+                        {
+                            SDCardStoragelabel.Invoke(LabelToUpdateDelegate, new Object[] { SDCardStoragelabel, ((int)(storageFreePercentage * 100)).ToString() + "% free", true });
+                        }
+                        else
+                        {
+                            InternalStoragelabel.Invoke(LabelToUpdateDelegate, new Object[] { InternalStoragelabel, ((int)(storageFreePercentage * 100)).ToString() + "% free", true });
+                        }
+                    }
+                    FullTextSmartAir = FullTextSmartAir.Substring(0, storageIndex);
+                }
+                else
+                {
+                    FullTextSmartAir = FullTextSmartAir.Substring(1);
+                }
+
+                if (FullTextSmartAir.Contains("file:") && FullTextSmartAir.Contains("\r\n") && FullTextSmartAir.Contains(".CSV"))
+                {
+                    int firstSeperatorIndex = FullTextSmartAir.IndexOf(":");
+                    int EOLIndex = FullTextSmartAir.IndexOf("\r\n", firstSeperatorIndex);
+                    string localFile = FullTextSmartAir.Substring(firstSeperatorIndex + 1, EOLIndex - firstSeperatorIndex - 1);
+                    if (localFile.Contains(".CSV"))
+                    {
+                        int commaIndex = localFile.IndexOf(",");
+                        int firstTabIndex = localFile.IndexOf("\t", firstSeperatorIndex);
+                        logFiles.Add(localFile.Replace(" ", ""));
+                        List<string> localLogFiles = logFiles.Union(logFiles).ToList();
+                        logFiles.Clear();
+                        logFiles.AddRange(localLogFiles);
+                        int b = 1;
+                    }
+                    else
+                    {
+                        FullTextSmartAir = FullTextSmartAir.Substring(localFile.Length);
+                    }
+                    int a = 1;
+                }
+                else
+                {
+                    FullTextSmartAir = FullTextSmartAir.Substring(1);
+                }
+            }
+        }
+
+        private void ESImportLogsbutton_Click(object sender, EventArgs e)
+        {
+            string selectedPath = "";
+            selectedFolderForLogs = new FolderBrowserDialog();
+            logFiles.Sort();
+
+
+            if (selectedFolderForLogs.ShowDialog() == DialogResult.OK)
+            {
+                string unitType = ESsapTypecomboBox.SelectedItem.ToString();
+                selectedStorageType = ESStorageTypecomboBox.SelectedIndex;
+                selectedUnitType = unitType;
+                logImportWorker.RunWorkerAsync();
+            }
+
+        }
+
+        private void logImportWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //BackgroundProcessLogicMethod();
+
+            foreach (string s in logFiles)
+            {
+                if (s.Contains(".CSV"))
+                {
+                    FullTextSmartAir = "";
+                    ESPort._FullText = "";
+                    int commaSeparator = s.IndexOf(",");
+                    int tabSeparator = s.IndexOf("\t");
+                    string localFileName = selectedFolderForLogs.SelectedPath + "\\" + s.Substring(0, commaSeparator);// selectedFolderForLogs.SelectedPath + "\\" + s.Substring(0, commaSeparator);
+                    string localFileSize = s.Substring(tabSeparator + 1);
+                    logSizeImportedFile = int.Parse(localFileSize);
+                    copiedFileNamelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFileNamelabel, s.Substring(0, commaSeparator), true });
+                    if (logSizeImportedFile != 0)
+                    {
+                        File.Create(localFileName).Dispose();
+                        tw = new StreamWriter(localFileName, true);
+
+                        currentSizeImportedFile = 0;
+                        isFileImportInProgress = true;
+
+                        ESPort.WriteToPort("FC");
+                        Thread.Sleep(3000);
+
+                        if (selectedUnitType.Equals("Bare Metal"))
+                        {
+                            ESPort.WriteToPort("imp \"" + s.Substring(0, commaSeparator) + "\"");
+                        }
+                        else if (selectedUnitType.Equals("RTOS 6.01"))
+                        {
+                            if (selectedStorageType.Equals(1))
+                            {
+                                ESPort.WriteToPort("imp \"1:/" + s.Substring(0, commaSeparator) + "\" 1");
+                            }
+                            else if (selectedStorageType.Equals(0))
+                            {
+                                ESPort.WriteToPort("imp \"0:/" + s.Substring(0, commaSeparator) + "\" 0");
+                            }
+                        }
+                        else if (selectedUnitType.Equals("RTOS +6.02"))
+                        {
+                            if (selectedStorageType.Equals(1))
+                            {
+                                ESPort.WriteToPort("imp \"1:/" + s.Substring(0, commaSeparator) + "\" 1");
+                            }
+                            else if (selectedStorageType.Equals(0))
+                            {
+                                ESPort.WriteToPort("imp \"0:/" + s.Substring(0, commaSeparator) + "\" 0");
+                            }
+                        }
+
+                        while (!eofReached)
+                        {
+                            Thread.Sleep(100);
+                            SDCardStoragelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFilePercentlabel, ((int)(100 * (float)((currentSizeImportedFile * 1.0f) / (logSizeImportedFile * 1.0f)))).ToString() + "%", true });
+                        }
+                        tw.Close();
+                        eofReached = false;
+                        Thread.Sleep(1000);
+                        copiedFilePercentlabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFilePercentlabel, "0%", true });
+                    }
+                }
+            }
+            copiedFilePercentlabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFilePercentlabel, "", true });
+            copiedFileNamelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFileNamelabel, "Finished", true });
+        }
+
+        private void testObutton_Click(object sender, EventArgs e)
+        {
+            ESPort.WriteToPort("imp \"1:/LOG_10_.CSV\" 1 10");
         }
     }
 }

@@ -59,6 +59,7 @@
             this.selectBinFile = new System.Windows.Forms.Button();
             this.fileNameTextBox = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.RTOSFormatcheckBox = new System.Windows.Forms.CheckBox();
             this.MLNumOfPointstextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -79,9 +80,36 @@
             this.generalFlightToolStripMenuItem = new System.Windows.Forms.ToolStripTextBox();
             this.landingToolStripMenuItem = new System.Windows.Forms.ToolStripTextBox();
             this.resetSelectedPointsToolStripMenuItem = new System.Windows.Forms.ToolStripTextBox();
+            this.EasySupport = new System.Windows.Forms.TabPage();
+            this.testObutton = new System.Windows.Forms.Button();
+            this.ESImportLogsbutton = new System.Windows.Forms.Button();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.SDCardStoragelabel = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.InternalStoragelabel = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.ESStorageTypecomboBox = new System.Windows.Forms.ComboBox();
+            this.ESStorageStatusbutton = new System.Windows.Forms.Button();
+            this.ESArmDisarmbutton = new System.Windows.Forms.Button();
+            this.ESResetbutton = new System.Windows.Forms.Button();
+            this.ESsapTypecomboBox = new System.Windows.Forms.ComboBox();
+            this.ESunLockbutton = new System.Windows.Forms.Button();
+            this.ESPorttextBox = new System.Windows.Forms.TextBox();
+            this.ESPortRefreshbutton = new System.Windows.Forms.Button();
+            this.ESPortOpenButton = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.ESPortcomboBox = new System.Windows.Forms.ComboBox();
             this.NumberOfColumnstoolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DirectoryNametoolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.RTOSFormatcheckBox = new System.Windows.Forms.CheckBox();
+            this.copiedFilePercentpanel = new System.Windows.Forms.Panel();
+            this.copiedFilePercentlabel = new System.Windows.Forms.Label();
+            this.copiedFileNamepanel = new System.Windows.Forms.Panel();
+            this.copiedFileNamelabel = new System.Windows.Forms.Label();
             this.MaintabControl.SuspendLayout();
             this.FileMergertabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumberOfColumsQmarkspictureBox)).BeginInit();
@@ -91,6 +119,14 @@
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.EasySupport.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.copiedFilePercentpanel.SuspendLayout();
+            this.copiedFileNamepanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MaintabControl
@@ -99,6 +135,7 @@
             this.MaintabControl.Controls.Add(this.UpdateConfigtabPage);
             this.MaintabControl.Controls.Add(this.tabPage1);
             this.MaintabControl.Controls.Add(this.tabPage2);
+            this.MaintabControl.Controls.Add(this.EasySupport);
             this.MaintabControl.Location = new System.Drawing.Point(38, 13);
             this.MaintabControl.Name = "MaintabControl";
             this.MaintabControl.SelectedIndex = 0;
@@ -387,6 +424,18 @@
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "ML Filter";
             // 
+            // RTOSFormatcheckBox
+            // 
+            this.RTOSFormatcheckBox.AutoSize = true;
+            this.RTOSFormatcheckBox.Checked = true;
+            this.RTOSFormatcheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.RTOSFormatcheckBox.Location = new System.Drawing.Point(570, 62);
+            this.RTOSFormatcheckBox.Name = "RTOSFormatcheckBox";
+            this.RTOSFormatcheckBox.Size = new System.Drawing.Size(88, 17);
+            this.RTOSFormatcheckBox.TabIndex = 10;
+            this.RTOSFormatcheckBox.Text = "RTOS format";
+            this.RTOSFormatcheckBox.UseVisualStyleBackColor = true;
+            // 
             // MLNumOfPointstextBox
             // 
             this.MLNumOfPointstextBox.Location = new System.Drawing.Point(840, 21);
@@ -568,21 +617,305 @@
             this.resetSelectedPointsToolStripMenuItem.Text = "Reset Selected Points";
             this.resetSelectedPointsToolStripMenuItem.Click += new System.EventHandler(this.resetSelectedPointsToolStripMenuItem_Click);
             // 
+            // EasySupport
+            // 
+            this.EasySupport.BackColor = System.Drawing.SystemColors.Control;
+            this.EasySupport.Controls.Add(this.testObutton);
+            this.EasySupport.Controls.Add(this.ESImportLogsbutton);
+            this.EasySupport.Controls.Add(this.tableLayoutPanel2);
+            this.EasySupport.Controls.Add(this.tableLayoutPanel1);
+            this.EasySupport.Controls.Add(this.ESStorageTypecomboBox);
+            this.EasySupport.Controls.Add(this.ESStorageStatusbutton);
+            this.EasySupport.Controls.Add(this.ESArmDisarmbutton);
+            this.EasySupport.Controls.Add(this.ESResetbutton);
+            this.EasySupport.Controls.Add(this.ESsapTypecomboBox);
+            this.EasySupport.Controls.Add(this.ESunLockbutton);
+            this.EasySupport.Controls.Add(this.ESPorttextBox);
+            this.EasySupport.Controls.Add(this.ESPortRefreshbutton);
+            this.EasySupport.Controls.Add(this.ESPortOpenButton);
+            this.EasySupport.Controls.Add(this.label4);
+            this.EasySupport.Controls.Add(this.ESPortcomboBox);
+            this.EasySupport.Location = new System.Drawing.Point(4, 22);
+            this.EasySupport.Name = "EasySupport";
+            this.EasySupport.Padding = new System.Windows.Forms.Padding(3);
+            this.EasySupport.Size = new System.Drawing.Size(1264, 521);
+            this.EasySupport.TabIndex = 4;
+            this.EasySupport.Text = "Easy Support";
+            // 
+            // testObutton
+            // 
+            this.testObutton.Location = new System.Drawing.Point(176, 473);
+            this.testObutton.Name = "testObutton";
+            this.testObutton.Size = new System.Drawing.Size(75, 23);
+            this.testObutton.TabIndex = 22;
+            this.testObutton.Text = "Test";
+            this.testObutton.UseVisualStyleBackColor = true;
+            this.testObutton.Click += new System.EventHandler(this.testObutton_Click);
+            // 
+            // ESImportLogsbutton
+            // 
+            this.ESImportLogsbutton.Location = new System.Drawing.Point(176, 443);
+            this.ESImportLogsbutton.Name = "ESImportLogsbutton";
+            this.ESImportLogsbutton.Size = new System.Drawing.Size(121, 23);
+            this.ESImportLogsbutton.TabIndex = 21;
+            this.ESImportLogsbutton.Text = "Import Logs";
+            this.ESImportLogsbutton.UseVisualStyleBackColor = true;
+            this.ESImportLogsbutton.Click += new System.EventHandler(this.ESImportLogsbutton_Click);
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.copiedFileNamepanel, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.copiedFilePercentpanel, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.panel4, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.panel3, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.panel2, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 0);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(954, 57);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 3;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.47619F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.52381F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(247, 153);
+            this.tableLayoutPanel2.TabIndex = 20;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.SDCardStoragelabel);
+            this.panel4.Location = new System.Drawing.Point(126, 52);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(118, 43);
+            this.panel4.TabIndex = 20;
+            // 
+            // SDCardStoragelabel
+            // 
+            this.SDCardStoragelabel.AutoSize = true;
+            this.SDCardStoragelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SDCardStoragelabel.Location = new System.Drawing.Point(3, 14);
+            this.SDCardStoragelabel.Name = "SDCardStoragelabel";
+            this.SDCardStoragelabel.Size = new System.Drawing.Size(31, 17);
+            this.SDCardStoragelabel.TabIndex = 0;
+            this.SDCardStoragelabel.Text = "N/A";
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.label7);
+            this.panel3.Location = new System.Drawing.Point(3, 52);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(117, 43);
+            this.panel3.TabIndex = 20;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label7.Location = new System.Drawing.Point(5, 14);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(61, 17);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "SD Card";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.InternalStoragelabel);
+            this.panel2.Location = new System.Drawing.Point(126, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(118, 43);
+            this.panel2.TabIndex = 20;
+            // 
+            // InternalStoragelabel
+            // 
+            this.InternalStoragelabel.AutoSize = true;
+            this.InternalStoragelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InternalStoragelabel.Location = new System.Drawing.Point(3, 16);
+            this.InternalStoragelabel.Name = "InternalStoragelabel";
+            this.InternalStoragelabel.Size = new System.Drawing.Size(31, 17);
+            this.InternalStoragelabel.TabIndex = 0;
+            this.InternalStoragelabel.Text = "N/A";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(117, 43);
+            this.panel1.TabIndex = 19;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(5, 14);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(109, 17);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Internal Storage";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(388, 413);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 100);
+            this.tableLayoutPanel1.TabIndex = 18;
+            // 
+            // ESStorageTypecomboBox
+            // 
+            this.ESStorageTypecomboBox.FormattingEnabled = true;
+            this.ESStorageTypecomboBox.Items.AddRange(new object[] {
+            "Internal",
+            "SD Card"});
+            this.ESStorageTypecomboBox.Location = new System.Drawing.Point(176, 366);
+            this.ESStorageTypecomboBox.Name = "ESStorageTypecomboBox";
+            this.ESStorageTypecomboBox.Size = new System.Drawing.Size(121, 21);
+            this.ESStorageTypecomboBox.TabIndex = 17;
+            // 
+            // ESStorageStatusbutton
+            // 
+            this.ESStorageStatusbutton.Location = new System.Drawing.Point(176, 413);
+            this.ESStorageStatusbutton.Name = "ESStorageStatusbutton";
+            this.ESStorageStatusbutton.Size = new System.Drawing.Size(121, 23);
+            this.ESStorageStatusbutton.TabIndex = 16;
+            this.ESStorageStatusbutton.Text = "Storage Status";
+            this.ESStorageStatusbutton.UseVisualStyleBackColor = true;
+            this.ESStorageStatusbutton.Click += new System.EventHandler(this.ESStorageStatusbutton_Click);
+            // 
+            // ESArmDisarmbutton
+            // 
+            this.ESArmDisarmbutton.Location = new System.Drawing.Point(16, 473);
+            this.ESArmDisarmbutton.Name = "ESArmDisarmbutton";
+            this.ESArmDisarmbutton.Size = new System.Drawing.Size(84, 23);
+            this.ESArmDisarmbutton.TabIndex = 14;
+            this.ESArmDisarmbutton.Text = "Arm / Disarm";
+            this.ESArmDisarmbutton.UseVisualStyleBackColor = true;
+            this.ESArmDisarmbutton.Click += new System.EventHandler(this.ESArmDisarmbutton_Click);
+            // 
+            // ESResetbutton
+            // 
+            this.ESResetbutton.Location = new System.Drawing.Point(16, 444);
+            this.ESResetbutton.Name = "ESResetbutton";
+            this.ESResetbutton.Size = new System.Drawing.Size(84, 23);
+            this.ESResetbutton.TabIndex = 13;
+            this.ESResetbutton.Text = "Reset";
+            this.ESResetbutton.UseVisualStyleBackColor = true;
+            this.ESResetbutton.Click += new System.EventHandler(this.ESResetbutton_Click);
+            // 
+            // ESsapTypecomboBox
+            // 
+            this.ESsapTypecomboBox.FormattingEnabled = true;
+            this.ESsapTypecomboBox.Items.AddRange(new object[] {
+            "Bare Metal",
+            "RTOS 6.01",
+            "RTOS +6.02"});
+            this.ESsapTypecomboBox.Location = new System.Drawing.Point(16, 367);
+            this.ESsapTypecomboBox.Name = "ESsapTypecomboBox";
+            this.ESsapTypecomboBox.Size = new System.Drawing.Size(121, 21);
+            this.ESsapTypecomboBox.TabIndex = 12;
+            // 
+            // ESunLockbutton
+            // 
+            this.ESunLockbutton.Location = new System.Drawing.Point(16, 414);
+            this.ESunLockbutton.Name = "ESunLockbutton";
+            this.ESunLockbutton.Size = new System.Drawing.Size(84, 23);
+            this.ESunLockbutton.TabIndex = 11;
+            this.ESunLockbutton.Text = "Unlock";
+            this.ESunLockbutton.UseVisualStyleBackColor = true;
+            this.ESunLockbutton.Click += new System.EventHandler(this.ESunLockbutton_Click);
+            // 
+            // ESPorttextBox
+            // 
+            this.ESPorttextBox.Location = new System.Drawing.Point(16, 57);
+            this.ESPorttextBox.Multiline = true;
+            this.ESPorttextBox.Name = "ESPorttextBox";
+            this.ESPorttextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ESPorttextBox.Size = new System.Drawing.Size(900, 280);
+            this.ESPorttextBox.TabIndex = 10;
+            // 
+            // ESPortRefreshbutton
+            // 
+            this.ESPortRefreshbutton.Location = new System.Drawing.Point(347, 28);
+            this.ESPortRefreshbutton.Name = "ESPortRefreshbutton";
+            this.ESPortRefreshbutton.Size = new System.Drawing.Size(75, 23);
+            this.ESPortRefreshbutton.TabIndex = 9;
+            this.ESPortRefreshbutton.Text = "Refresh Ports";
+            this.ESPortRefreshbutton.UseVisualStyleBackColor = true;
+            this.ESPortRefreshbutton.Click += new System.EventHandler(this.ESPortRefreshbutton_Click);
+            // 
+            // ESPortOpenButton
+            // 
+            this.ESPortOpenButton.Location = new System.Drawing.Point(240, 28);
+            this.ESPortOpenButton.Name = "ESPortOpenButton";
+            this.ESPortOpenButton.Size = new System.Drawing.Size(75, 23);
+            this.ESPortOpenButton.TabIndex = 8;
+            this.ESPortOpenButton.Text = "Open";
+            this.ESPortOpenButton.UseVisualStyleBackColor = true;
+            this.ESPortOpenButton.Click += new System.EventHandler(this.ESPortOpenButton_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 35);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Com Port:";
+            // 
+            // ESPortcomboBox
+            // 
+            this.ESPortcomboBox.FormattingEnabled = true;
+            this.ESPortcomboBox.Location = new System.Drawing.Point(86, 30);
+            this.ESPortcomboBox.Name = "ESPortcomboBox";
+            this.ESPortcomboBox.Size = new System.Drawing.Size(121, 21);
+            this.ESPortcomboBox.TabIndex = 6;
+            this.ESPortcomboBox.SelectedIndexChanged += new System.EventHandler(this.ESPortcomboBox_SelectedIndexChanged);
+            // 
             // NumberOfColumnstoolTip
             // 
             this.NumberOfColumnstoolTip.ShowAlways = true;
             // 
-            // RTOSFormatcheckBox
+            // copiedFilePercentpanel
             // 
-            this.RTOSFormatcheckBox.AutoSize = true;
-            this.RTOSFormatcheckBox.Checked = true;
-            this.RTOSFormatcheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.RTOSFormatcheckBox.Location = new System.Drawing.Point(570, 62);
-            this.RTOSFormatcheckBox.Name = "RTOSFormatcheckBox";
-            this.RTOSFormatcheckBox.Size = new System.Drawing.Size(88, 17);
-            this.RTOSFormatcheckBox.TabIndex = 10;
-            this.RTOSFormatcheckBox.Text = "RTOS format";
-            this.RTOSFormatcheckBox.UseVisualStyleBackColor = true;
+            this.copiedFilePercentpanel.Controls.Add(this.copiedFilePercentlabel);
+            this.copiedFilePercentpanel.Location = new System.Drawing.Point(126, 101);
+            this.copiedFilePercentpanel.Name = "copiedFilePercentpanel";
+            this.copiedFilePercentpanel.Size = new System.Drawing.Size(117, 43);
+            this.copiedFilePercentpanel.TabIndex = 21;
+            // 
+            // copiedFilePercentlabel
+            // 
+            this.copiedFilePercentlabel.AutoSize = true;
+            this.copiedFilePercentlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.copiedFilePercentlabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.copiedFilePercentlabel.Location = new System.Drawing.Point(5, 14);
+            this.copiedFilePercentlabel.Name = "copiedFilePercentlabel";
+            this.copiedFilePercentlabel.Size = new System.Drawing.Size(0, 17);
+            this.copiedFilePercentlabel.TabIndex = 0;
+            // 
+            // copiedFileNamepanel
+            // 
+            this.copiedFileNamepanel.Controls.Add(this.copiedFileNamelabel);
+            this.copiedFileNamepanel.Location = new System.Drawing.Point(3, 101);
+            this.copiedFileNamepanel.Name = "copiedFileNamepanel";
+            this.copiedFileNamepanel.Size = new System.Drawing.Size(117, 43);
+            this.copiedFileNamepanel.TabIndex = 22;
+            // 
+            // copiedFileNamelabel
+            // 
+            this.copiedFileNamelabel.AutoSize = true;
+            this.copiedFileNamelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.copiedFileNamelabel.Location = new System.Drawing.Point(3, 14);
+            this.copiedFileNamelabel.Name = "copiedFileNamelabel";
+            this.copiedFileNamelabel.Size = new System.Drawing.Size(0, 17);
+            this.copiedFileNamelabel.TabIndex = 0;
             // 
             // Form1
             // 
@@ -593,7 +926,7 @@
             this.ClientSize = new System.Drawing.Size(1322, 572);
             this.Controls.Add(this.MaintabControl);
             this.Name = "Form1";
-            this.Text = "ParaTools V1.0.8";
+            this.Text = "ParaTools V1.0.9";
             this.MaintabControl.ResumeLayout(false);
             this.FileMergertabPage.ResumeLayout(false);
             this.FileMergertabPage.PerformLayout();
@@ -608,6 +941,21 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.contextMenuStrip1.PerformLayout();
+            this.EasySupport.ResumeLayout(false);
+            this.EasySupport.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.copiedFilePercentpanel.ResumeLayout(false);
+            this.copiedFilePercentpanel.PerformLayout();
+            this.copiedFileNamepanel.ResumeLayout(false);
+            this.copiedFileNamepanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -664,6 +1012,34 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ToolStripTextBox resetSelectedPointsToolStripMenuItem;
         private System.Windows.Forms.CheckBox RTOSFormatcheckBox;
+        private System.Windows.Forms.TabPage EasySupport;
+        private System.Windows.Forms.Button ESPortRefreshbutton;
+        private System.Windows.Forms.Button ESPortOpenButton;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox ESPortcomboBox;
+        private System.Windows.Forms.ComboBox ESsapTypecomboBox;
+        private System.Windows.Forms.Button ESunLockbutton;
+        private System.Windows.Forms.TextBox ESPorttextBox;
+        private System.Windows.Forms.Button ESResetbutton;
+        private System.Windows.Forms.Button ESArmDisarmbutton;
+        private System.Windows.Forms.ComboBox ESStorageTypecomboBox;
+        private System.Windows.Forms.Button ESStorageStatusbutton;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label SDCardStoragelabel;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label InternalStoragelabel;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Button ESImportLogsbutton;
+        private System.Windows.Forms.Button testObutton;
+        private System.Windows.Forms.Panel copiedFileNamepanel;
+        private System.Windows.Forms.Label copiedFileNamelabel;
+        private System.Windows.Forms.Panel copiedFilePercentpanel;
+        private System.Windows.Forms.Label copiedFilePercentlabel;
     }
 }
 
