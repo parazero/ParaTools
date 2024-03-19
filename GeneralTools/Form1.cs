@@ -22,6 +22,7 @@ using ParaZero.StatisticsInfra;
 using static System.Windows.Forms.ListView;
 using System.Windows.Forms.DataVisualization.Charting;
 using static ParaZero.SerialCommInfra.SerialCommPort;
+using static ParaZero.AwsInfra.AwsClass;
 
 namespace GeneralTools
 {
@@ -80,6 +81,7 @@ namespace GeneralTools
         public ReadComboBoxIndexDelegate readComboBoxIndexDelegate;
 
         BackgroundWorker logImportWorker = new BackgroundWorker();
+        BackgroundWorker logUploadToAwsWorker = new BackgroundWorker();
 
         public Form1()
         {
@@ -1645,6 +1647,9 @@ namespace GeneralTools
 
         private void ESImportLogsbutton_Click(object sender, EventArgs e)
         {
+
+            ESStorageStatusbutton_Click(sender, e);
+            Thread.Sleep(2000);
             string selectedPath = "";
             selectedFolderForLogs = new FolderBrowserDialog();
             logFiles.Sort();
@@ -1656,6 +1661,9 @@ namespace GeneralTools
                 selectedStorageType = ESStorageTypecomboBox.SelectedIndex;
                 selectedUnitType = unitType;
                 logImportWorker.RunWorkerAsync();
+                Thread.Sleep(3000);
+                logUploadToAwsWorker.RunWorkerAsync();
+
             }
 
         }
@@ -1728,11 +1736,25 @@ namespace GeneralTools
             }
             copiedFilePercentlabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFilePercentlabel, "", true });
             copiedFileNamelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFileNamelabel, "Finished", true });
+
+        }
+
+        private async void logUploadToAwsWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //TODO: Add Aws reachable test
+            //TODO: show popup message asking permission to upload logs
+            copiedFileNamelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFileNamelabel, "Load Logs to Server", true });
+            string[] csvFileEntries = Directory.GetFiles(selectedFolderForLogs.SelectedPath + "\\");
+
+            foreach (string csvFileName in csvFileEntries)
+            {
+                await uploadFileToAwsBucket(csvFileName, csvFileName);
+            }
         }
 
         private void testObutton_Click(object sender, EventArgs e)
         {
-            ESPort.WriteToPort("imp \"1:/LOG_10_.CSV\" 1 10");
+            ESPort.WriteToPort("stdby");
         }
     }
 }

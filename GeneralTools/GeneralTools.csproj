@@ -48,10 +48,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>73B841AE81B5942543E785D6821080D3401996AE</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>E2D6DEBE733D3F761069705A5DBD9FDE093F0044</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>GeneralTools_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>GeneralTools_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -98,7 +98,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="GeneralTools_TemporaryKey.pfx" />
+    <None Include="GeneralTools_1_TemporaryKey.pfx" />
     <None Include="NANO_OSR_256.bin" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -114,12 +114,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ParaZeroInfrastructure\ParaZeroInfrastructure\ParaZeroInfrastructure.csproj">
-      <Project>{8bab30c4-833d-49b6-a80e-9829cbd56cbb}</Project>
-      <Name>ParaZeroInfrastructure</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
@@ -130,6 +124,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ParaZeroInfrastructure\ParaZeroInfrastructure\ParaZeroInfrastructure.csproj">
+      <Project>{8bab30c4-833d-49b6-a80e-9829cbd56cbb}</Project>
+      <Name>ParaZeroInfrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

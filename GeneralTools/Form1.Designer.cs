@@ -84,6 +84,10 @@
             this.testObutton = new System.Windows.Forms.Button();
             this.ESImportLogsbutton = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.copiedFileNamepanel = new System.Windows.Forms.Panel();
+            this.copiedFileNamelabel = new System.Windows.Forms.Label();
+            this.copiedFilePercentpanel = new System.Windows.Forms.Panel();
+            this.copiedFilePercentlabel = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.SDCardStoragelabel = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -106,10 +110,6 @@
             this.ESPortcomboBox = new System.Windows.Forms.ComboBox();
             this.NumberOfColumnstoolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DirectoryNametoolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.copiedFilePercentpanel = new System.Windows.Forms.Panel();
-            this.copiedFilePercentlabel = new System.Windows.Forms.Label();
-            this.copiedFileNamepanel = new System.Windows.Forms.Panel();
-            this.copiedFileNamelabel = new System.Windows.Forms.Label();
             this.MaintabControl.SuspendLayout();
             this.FileMergertabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumberOfColumsQmarkspictureBox)).BeginInit();
@@ -121,12 +121,12 @@
             this.contextMenuStrip1.SuspendLayout();
             this.EasySupport.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.copiedFileNamepanel.SuspendLayout();
+            this.copiedFilePercentpanel.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.copiedFilePercentpanel.SuspendLayout();
-            this.copiedFileNamepanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MaintabControl
@@ -646,9 +646,9 @@
             // 
             this.testObutton.Location = new System.Drawing.Point(176, 473);
             this.testObutton.Name = "testObutton";
-            this.testObutton.Size = new System.Drawing.Size(75, 23);
+            this.testObutton.Size = new System.Drawing.Size(121, 23);
             this.testObutton.TabIndex = 22;
-            this.testObutton.Text = "Test";
+            this.testObutton.Text = "Stop SafeAir";
             this.testObutton.UseVisualStyleBackColor = true;
             this.testObutton.Click += new System.EventHandler(this.testObutton_Click);
             // 
@@ -681,6 +681,41 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(247, 153);
             this.tableLayoutPanel2.TabIndex = 20;
+            // 
+            // copiedFileNamepanel
+            // 
+            this.copiedFileNamepanel.Controls.Add(this.copiedFileNamelabel);
+            this.copiedFileNamepanel.Location = new System.Drawing.Point(3, 101);
+            this.copiedFileNamepanel.Name = "copiedFileNamepanel";
+            this.copiedFileNamepanel.Size = new System.Drawing.Size(117, 43);
+            this.copiedFileNamepanel.TabIndex = 22;
+            // 
+            // copiedFileNamelabel
+            // 
+            this.copiedFileNamelabel.AutoSize = true;
+            this.copiedFileNamelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.copiedFileNamelabel.Location = new System.Drawing.Point(3, 14);
+            this.copiedFileNamelabel.Name = "copiedFileNamelabel";
+            this.copiedFileNamelabel.Size = new System.Drawing.Size(0, 17);
+            this.copiedFileNamelabel.TabIndex = 0;
+            // 
+            // copiedFilePercentpanel
+            // 
+            this.copiedFilePercentpanel.Controls.Add(this.copiedFilePercentlabel);
+            this.copiedFilePercentpanel.Location = new System.Drawing.Point(126, 101);
+            this.copiedFilePercentpanel.Name = "copiedFilePercentpanel";
+            this.copiedFilePercentpanel.Size = new System.Drawing.Size(117, 43);
+            this.copiedFilePercentpanel.TabIndex = 21;
+            // 
+            // copiedFilePercentlabel
+            // 
+            this.copiedFilePercentlabel.AutoSize = true;
+            this.copiedFilePercentlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.copiedFilePercentlabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.copiedFilePercentlabel.Location = new System.Drawing.Point(5, 14);
+            this.copiedFilePercentlabel.Name = "copiedFilePercentlabel";
+            this.copiedFilePercentlabel.Size = new System.Drawing.Size(0, 17);
+            this.copiedFilePercentlabel.TabIndex = 0;
             // 
             // panel4
             // 
@@ -882,41 +917,6 @@
             // 
             this.NumberOfColumnstoolTip.ShowAlways = true;
             // 
-            // copiedFilePercentpanel
-            // 
-            this.copiedFilePercentpanel.Controls.Add(this.copiedFilePercentlabel);
-            this.copiedFilePercentpanel.Location = new System.Drawing.Point(126, 101);
-            this.copiedFilePercentpanel.Name = "copiedFilePercentpanel";
-            this.copiedFilePercentpanel.Size = new System.Drawing.Size(117, 43);
-            this.copiedFilePercentpanel.TabIndex = 21;
-            // 
-            // copiedFilePercentlabel
-            // 
-            this.copiedFilePercentlabel.AutoSize = true;
-            this.copiedFilePercentlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.copiedFilePercentlabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.copiedFilePercentlabel.Location = new System.Drawing.Point(5, 14);
-            this.copiedFilePercentlabel.Name = "copiedFilePercentlabel";
-            this.copiedFilePercentlabel.Size = new System.Drawing.Size(0, 17);
-            this.copiedFilePercentlabel.TabIndex = 0;
-            // 
-            // copiedFileNamepanel
-            // 
-            this.copiedFileNamepanel.Controls.Add(this.copiedFileNamelabel);
-            this.copiedFileNamepanel.Location = new System.Drawing.Point(3, 101);
-            this.copiedFileNamepanel.Name = "copiedFileNamepanel";
-            this.copiedFileNamepanel.Size = new System.Drawing.Size(117, 43);
-            this.copiedFileNamepanel.TabIndex = 22;
-            // 
-            // copiedFileNamelabel
-            // 
-            this.copiedFileNamelabel.AutoSize = true;
-            this.copiedFileNamelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.copiedFileNamelabel.Location = new System.Drawing.Point(3, 14);
-            this.copiedFileNamelabel.Name = "copiedFileNamelabel";
-            this.copiedFileNamelabel.Size = new System.Drawing.Size(0, 17);
-            this.copiedFileNamelabel.TabIndex = 0;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -944,6 +944,10 @@
             this.EasySupport.ResumeLayout(false);
             this.EasySupport.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.copiedFileNamepanel.ResumeLayout(false);
+            this.copiedFileNamepanel.PerformLayout();
+            this.copiedFilePercentpanel.ResumeLayout(false);
+            this.copiedFilePercentpanel.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -952,10 +956,6 @@
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.copiedFilePercentpanel.ResumeLayout(false);
-            this.copiedFilePercentpanel.PerformLayout();
-            this.copiedFileNamepanel.ResumeLayout(false);
-            this.copiedFileNamepanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
