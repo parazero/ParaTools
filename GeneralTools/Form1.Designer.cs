@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.MaintabControl = new System.Windows.Forms.TabControl();
             this.FileMergertabPage = new System.Windows.Forms.TabPage();
             this.FilesToMergecheckedListBox = new System.Windows.Forms.CheckedListBox();
@@ -110,6 +110,7 @@
             this.ESPortcomboBox = new System.Windows.Forms.ComboBox();
             this.NumberOfColumnstoolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DirectoryNametoolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.CloudUploadbutton = new System.Windows.Forms.Button();
             this.MaintabControl.SuspendLayout();
             this.FileMergertabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumberOfColumsQmarkspictureBox)).BeginInit();
@@ -455,14 +456,14 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
             this.chart1.Location = new System.Drawing.Point(774, 70);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Name = "MLBaroSeries";
-            this.chart1.Series.Add(series1);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Name = "MLBaroSeries";
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(484, 445);
             this.chart1.TabIndex = 7;
             this.chart1.Text = "MLBarochart";
@@ -620,6 +621,7 @@
             // EasySupport
             // 
             this.EasySupport.BackColor = System.Drawing.SystemColors.Control;
+            this.EasySupport.Controls.Add(this.CloudUploadbutton);
             this.EasySupport.Controls.Add(this.testObutton);
             this.EasySupport.Controls.Add(this.ESImportLogsbutton);
             this.EasySupport.Controls.Add(this.tableLayoutPanel2);
@@ -795,7 +797,7 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(388, 413);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(716, 396);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -917,6 +919,16 @@
             // 
             this.NumberOfColumnstoolTip.ShowAlways = true;
             // 
+            // CloudUploadbutton
+            // 
+            this.CloudUploadbutton.Location = new System.Drawing.Point(336, 443);
+            this.CloudUploadbutton.Name = "CloudUploadbutton";
+            this.CloudUploadbutton.Size = new System.Drawing.Size(111, 23);
+            this.CloudUploadbutton.TabIndex = 23;
+            this.CloudUploadbutton.Text = "Cloud Upload";
+            this.CloudUploadbutton.UseVisualStyleBackColor = true;
+            this.CloudUploadbutton.Click += new System.EventHandler(this.CloudUploadbutton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -926,7 +938,7 @@
             this.ClientSize = new System.Drawing.Size(1322, 572);
             this.Controls.Add(this.MaintabControl);
             this.Name = "Form1";
-            this.Text = "ParaTools V1.0.9";
+            this.Text = "ParaTools V1.0.11";
             this.MaintabControl.ResumeLayout(false);
             this.FileMergertabPage.ResumeLayout(false);
             this.FileMergertabPage.PerformLayout();
@@ -1040,6 +1052,7 @@
         private System.Windows.Forms.Label copiedFileNamelabel;
         private System.Windows.Forms.Panel copiedFilePercentpanel;
         private System.Windows.Forms.Label copiedFilePercentlabel;
+        private System.Windows.Forms.Button CloudUploadbutton;
     }
 }
 

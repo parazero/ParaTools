@@ -69,7 +69,7 @@ namespace GeneralTools
         SmartAirLogRepresentaion LogFile = new SmartAirLogRepresentaion();
 
         SerialCommPort ESPort;
-        FolderBrowserDialog selectedFolderForLogs;
+        FolderBrowserDialog selectedFolderForLogs = new FolderBrowserDialog();
 
         public delegate void AddDataDelegate(TextBox TextboxToUpdate, String myString, bool AppendOrReplace);
         public AddDataDelegate textBoxUpdateDelegate;
@@ -90,6 +90,7 @@ namespace GeneralTools
             LabelToUpdateDelegate = new UpdateLabelDelegate(UpdateLabeltextMethod);
             readComboBoxIndexDelegate = new ReadComboBoxIndexDelegate(getComboBoxIndexMethod);
             logImportWorker.DoWork += new DoWorkEventHandler(logImportWorker_DoWork);
+            logUploadToAwsWorker.DoWork += new DoWorkEventHandler(logUploadToAwsWorker_DoWork);
 
             chart1.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart1.MouseMove += new MouseEventHandler(MouseHover_HitTest);
@@ -1661,9 +1662,6 @@ namespace GeneralTools
                 selectedStorageType = ESStorageTypecomboBox.SelectedIndex;
                 selectedUnitType = unitType;
                 logImportWorker.RunWorkerAsync();
-                Thread.Sleep(3000);
-                logUploadToAwsWorker.RunWorkerAsync();
-
             }
 
         }
@@ -1737,24 +1735,51 @@ namespace GeneralTools
             copiedFilePercentlabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFilePercentlabel, "", true });
             copiedFileNamelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFileNamelabel, "Finished", true });
 
+            string message = "Files import Finished\r\n Upload to Cloud?";
+            string title = "Parazero Question";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            DialogResult result = MessageBox.Show(message, title, buttons);
+            if (result == DialogResult.Yes)
+            {
+                logUploadToAwsWorker.RunWorkerAsync();
+            }
+            else
+            {
+                this.Close();
+                // Do something
+            }
+
         }
 
         private async void logUploadToAwsWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             //TODO: Add Aws reachable test
             //TODO: show popup message asking permission to upload logs
-            copiedFileNamelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFileNamelabel, "Load Logs to Server", true });
             string[] csvFileEntries = Directory.GetFiles(selectedFolderForLogs.SelectedPath + "\\");
+            await uploadFileToAwsBucket(csvFileEntries);
+            string message = "Files Uploaded to Cloud";
+            string title = "Parazero Remark";
+            DialogResult result = MessageBox.Show(message, title);
 
-            foreach (string csvFileName in csvFileEntries)
-            {
-                await uploadFileToAwsBucket(csvFileName, csvFileName);
-            }
         }
 
         private void testObutton_Click(object sender, EventArgs e)
         {
             ESPort.WriteToPort("stdby");
+        }
+
+        private void CloudUploadbutton_Click(object sender, EventArgs e)
+        {
+            string selectedPath = "";
+            selectedFolderForLogs = new FolderBrowserDialog();
+
+            if (selectedFolderForLogs.ShowDialog() == DialogResult.OK)
+            {
+                copiedFileNamelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFileNamelabel, "Load Logs to Server", true });
+                //string[] csvFileEntries = Directory.GetFiles(selectedFolderForLogs.SelectedPath + "\\");
+
+                logUploadToAwsWorker.RunWorkerAsync();
+            }
         }
     }
 }
