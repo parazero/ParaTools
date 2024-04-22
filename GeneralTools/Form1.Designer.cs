@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.MaintabControl = new System.Windows.Forms.TabControl();
             this.FileMergertabPage = new System.Windows.Forms.TabPage();
             this.FilesToMergecheckedListBox = new System.Windows.Forms.CheckedListBox();
@@ -81,6 +81,7 @@
             this.landingToolStripMenuItem = new System.Windows.Forms.ToolStripTextBox();
             this.resetSelectedPointsToolStripMenuItem = new System.Windows.Forms.ToolStripTextBox();
             this.EasySupport = new System.Windows.Forms.TabPage();
+            this.CloudUploadbutton = new System.Windows.Forms.Button();
             this.testObutton = new System.Windows.Forms.Button();
             this.ESImportLogsbutton = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -96,7 +97,6 @@
             this.InternalStoragelabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ESStorageTypecomboBox = new System.Windows.Forms.ComboBox();
             this.ESStorageStatusbutton = new System.Windows.Forms.Button();
             this.ESArmDisarmbutton = new System.Windows.Forms.Button();
@@ -110,7 +110,11 @@
             this.ESPortcomboBox = new System.Windows.Forms.ComboBox();
             this.NumberOfColumnstoolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DirectoryNametoolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.CloudUploadbutton = new System.Windows.Forms.Button();
+            this.ClearStoragebutton = new System.Windows.Forms.Button();
+            this.ImportConfigurationbutton = new System.Windows.Forms.Button();
+            this.LoadConfigurationbutton = new System.Windows.Forms.Button();
+            this.ManualTriggerbutton = new System.Windows.Forms.Button();
+            this.AutoTriggerbutton = new System.Windows.Forms.Button();
             this.MaintabControl.SuspendLayout();
             this.FileMergertabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumberOfColumsQmarkspictureBox)).BeginInit();
@@ -456,14 +460,14 @@
             // 
             // chart1
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Location = new System.Drawing.Point(774, 70);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Name = "MLBaroSeries";
-            this.chart1.Series.Add(series3);
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.Name = "MLBaroSeries";
+            this.chart1.Series.Add(series5);
             this.chart1.Size = new System.Drawing.Size(484, 445);
             this.chart1.TabIndex = 7;
             this.chart1.Text = "MLBarochart";
@@ -621,11 +625,15 @@
             // EasySupport
             // 
             this.EasySupport.BackColor = System.Drawing.SystemColors.Control;
+            this.EasySupport.Controls.Add(this.AutoTriggerbutton);
+            this.EasySupport.Controls.Add(this.ManualTriggerbutton);
+            this.EasySupport.Controls.Add(this.LoadConfigurationbutton);
+            this.EasySupport.Controls.Add(this.ImportConfigurationbutton);
+            this.EasySupport.Controls.Add(this.ClearStoragebutton);
             this.EasySupport.Controls.Add(this.CloudUploadbutton);
             this.EasySupport.Controls.Add(this.testObutton);
             this.EasySupport.Controls.Add(this.ESImportLogsbutton);
             this.EasySupport.Controls.Add(this.tableLayoutPanel2);
-            this.EasySupport.Controls.Add(this.tableLayoutPanel1);
             this.EasySupport.Controls.Add(this.ESStorageTypecomboBox);
             this.EasySupport.Controls.Add(this.ESStorageStatusbutton);
             this.EasySupport.Controls.Add(this.ESArmDisarmbutton);
@@ -644,9 +652,19 @@
             this.EasySupport.TabIndex = 4;
             this.EasySupport.Text = "Easy Support";
             // 
+            // CloudUploadbutton
+            // 
+            this.CloudUploadbutton.Location = new System.Drawing.Point(347, 443);
+            this.CloudUploadbutton.Name = "CloudUploadbutton";
+            this.CloudUploadbutton.Size = new System.Drawing.Size(121, 23);
+            this.CloudUploadbutton.TabIndex = 23;
+            this.CloudUploadbutton.Text = "Cloud Upload";
+            this.CloudUploadbutton.UseVisualStyleBackColor = true;
+            this.CloudUploadbutton.Click += new System.EventHandler(this.CloudUploadbutton_Click);
+            // 
             // testObutton
             // 
-            this.testObutton.Location = new System.Drawing.Point(176, 473);
+            this.testObutton.Location = new System.Drawing.Point(347, 472);
             this.testObutton.Name = "testObutton";
             this.testObutton.Size = new System.Drawing.Size(121, 23);
             this.testObutton.TabIndex = 22;
@@ -660,7 +678,7 @@
             this.ESImportLogsbutton.Name = "ESImportLogsbutton";
             this.ESImportLogsbutton.Size = new System.Drawing.Size(121, 23);
             this.ESImportLogsbutton.TabIndex = 21;
-            this.ESImportLogsbutton.Text = "Import Logs";
+            this.ESImportLogsbutton.Text = "Save logs locally";
             this.ESImportLogsbutton.UseVisualStyleBackColor = true;
             this.ESImportLogsbutton.Click += new System.EventHandler(this.ESImportLogsbutton_Click);
             // 
@@ -792,19 +810,6 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "Internal Storage";
             // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(716, 396);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 100);
-            this.tableLayoutPanel1.TabIndex = 18;
-            // 
             // ESStorageTypecomboBox
             // 
             this.ESStorageTypecomboBox.FormattingEnabled = true;
@@ -842,7 +847,7 @@
             this.ESResetbutton.Name = "ESResetbutton";
             this.ESResetbutton.Size = new System.Drawing.Size(84, 23);
             this.ESResetbutton.TabIndex = 13;
-            this.ESResetbutton.Text = "Reset";
+            this.ESResetbutton.Text = "Reset SafeAir";
             this.ESResetbutton.UseVisualStyleBackColor = true;
             this.ESResetbutton.Click += new System.EventHandler(this.ESResetbutton_Click);
             // 
@@ -919,15 +924,55 @@
             // 
             this.NumberOfColumnstoolTip.ShowAlways = true;
             // 
-            // CloudUploadbutton
+            // ClearStoragebutton
             // 
-            this.CloudUploadbutton.Location = new System.Drawing.Point(336, 443);
-            this.CloudUploadbutton.Name = "CloudUploadbutton";
-            this.CloudUploadbutton.Size = new System.Drawing.Size(111, 23);
-            this.CloudUploadbutton.TabIndex = 23;
-            this.CloudUploadbutton.Text = "Cloud Upload";
-            this.CloudUploadbutton.UseVisualStyleBackColor = true;
-            this.CloudUploadbutton.Click += new System.EventHandler(this.CloudUploadbutton_Click);
+            this.ClearStoragebutton.Location = new System.Drawing.Point(176, 472);
+            this.ClearStoragebutton.Name = "ClearStoragebutton";
+            this.ClearStoragebutton.Size = new System.Drawing.Size(121, 23);
+            this.ClearStoragebutton.TabIndex = 24;
+            this.ClearStoragebutton.Text = "Format Storage";
+            this.ClearStoragebutton.UseVisualStyleBackColor = true;
+            this.ClearStoragebutton.Click += new System.EventHandler(this.ClearStoragebutton_Click);
+            // 
+            // ImportConfigurationbutton
+            // 
+            this.ImportConfigurationbutton.Location = new System.Drawing.Point(521, 414);
+            this.ImportConfigurationbutton.Name = "ImportConfigurationbutton";
+            this.ImportConfigurationbutton.Size = new System.Drawing.Size(121, 23);
+            this.ImportConfigurationbutton.TabIndex = 25;
+            this.ImportConfigurationbutton.Text = "Save Configuration";
+            this.ImportConfigurationbutton.UseVisualStyleBackColor = true;
+            this.ImportConfigurationbutton.Click += new System.EventHandler(this.ImportConfigurationbutton_Click);
+            // 
+            // LoadConfigurationbutton
+            // 
+            this.LoadConfigurationbutton.Location = new System.Drawing.Point(521, 442);
+            this.LoadConfigurationbutton.Name = "LoadConfigurationbutton";
+            this.LoadConfigurationbutton.Size = new System.Drawing.Size(121, 23);
+            this.LoadConfigurationbutton.TabIndex = 26;
+            this.LoadConfigurationbutton.Text = "Load Configuration";
+            this.LoadConfigurationbutton.UseVisualStyleBackColor = true;
+            this.LoadConfigurationbutton.Click += new System.EventHandler(this.LoadConfigurationbutton_Click);
+            // 
+            // ManualTriggerbutton
+            // 
+            this.ManualTriggerbutton.Location = new System.Drawing.Point(699, 414);
+            this.ManualTriggerbutton.Name = "ManualTriggerbutton";
+            this.ManualTriggerbutton.Size = new System.Drawing.Size(121, 23);
+            this.ManualTriggerbutton.TabIndex = 27;
+            this.ManualTriggerbutton.Text = "Manual Trigger";
+            this.ManualTriggerbutton.UseVisualStyleBackColor = true;
+            this.ManualTriggerbutton.Click += new System.EventHandler(this.ManualTriggerbutton_Click);
+            // 
+            // AutoTriggerbutton
+            // 
+            this.AutoTriggerbutton.Location = new System.Drawing.Point(699, 441);
+            this.AutoTriggerbutton.Name = "AutoTriggerbutton";
+            this.AutoTriggerbutton.Size = new System.Drawing.Size(121, 23);
+            this.AutoTriggerbutton.TabIndex = 28;
+            this.AutoTriggerbutton.Text = "Auto Trigger";
+            this.AutoTriggerbutton.UseVisualStyleBackColor = true;
+            this.AutoTriggerbutton.Click += new System.EventHandler(this.AutoTriggerbutton_Click);
             // 
             // Form1
             // 
@@ -938,7 +983,7 @@
             this.ClientSize = new System.Drawing.Size(1322, 572);
             this.Controls.Add(this.MaintabControl);
             this.Name = "Form1";
-            this.Text = "ParaTools V1.0.11";
+            this.Text = "ParaTools V1.0.13";
             this.MaintabControl.ResumeLayout(false);
             this.FileMergertabPage.ResumeLayout(false);
             this.FileMergertabPage.PerformLayout();
@@ -1045,7 +1090,6 @@
         private System.Windows.Forms.Label InternalStoragelabel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button ESImportLogsbutton;
         private System.Windows.Forms.Button testObutton;
         private System.Windows.Forms.Panel copiedFileNamepanel;
@@ -1053,6 +1097,11 @@
         private System.Windows.Forms.Panel copiedFilePercentpanel;
         private System.Windows.Forms.Label copiedFilePercentlabel;
         private System.Windows.Forms.Button CloudUploadbutton;
+        private System.Windows.Forms.Button ClearStoragebutton;
+        private System.Windows.Forms.Button LoadConfigurationbutton;
+        private System.Windows.Forms.Button ImportConfigurationbutton;
+        private System.Windows.Forms.Button AutoTriggerbutton;
+        private System.Windows.Forms.Button ManualTriggerbutton;
     }
 }
 

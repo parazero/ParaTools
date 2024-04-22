@@ -28,6 +28,7 @@ namespace GeneralTools
 {
     public partial class Form1 : Form
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         string[] files;
         bool AutoMergeFlag = false;
         TextWriter tw;
@@ -113,6 +114,10 @@ namespace GeneralTools
 
             ESsapTypecomboBox.SelectedIndex = 2;
             ESStorageTypecomboBox.SelectedIndex = 1;
+
+            string unitType = ESsapTypecomboBox.SelectedItem.ToString();
+            selectedStorageType = ESStorageTypecomboBox.SelectedIndex;
+            selectedUnitType = unitType;
 
 
             _serialPort = new SerialPort();
@@ -1406,7 +1411,7 @@ namespace GeneralTools
         private void ESPortOpenButton_Click(object sender, EventArgs e)
         {
             string SelectedPort = "";
-
+            log.Info("Hello logging world!");
             SelectedPort = ESPortcomboBox.Text;
             //_serialPort.PortName = SelectedPort;
             //_serialPort.BaudRate = 921600;//115200;//
@@ -1416,7 +1421,7 @@ namespace GeneralTools
             //_serialPort.Handshake = 0;
             //_serialPort.ReadBufferSize = 500000;
             ESPort = new SerialCommPort(SelectedPort, 921600, Parity.None, 8, StopBits.One, Handshake.None, 5000000);
-            ESPort.SleepAfterWriteLineEvent = 1000;
+            ESPort.SleepAfterWriteLineEvent = 3000;
 
             ESPort.OpenSerialCommPort();
 
@@ -1481,6 +1486,8 @@ namespace GeneralTools
         {
             string unitType = ESsapTypecomboBox.SelectedItem.ToString();
 
+            log.InfoFormat("Unlocking unit type: {0}", unitType);
+
             if (unitType.Equals("Bare Metal"))
             {
                 ESPort.WriteToPort("EPW \"PARAZERO@DOVHOZ#30\"");
@@ -1520,7 +1527,7 @@ namespace GeneralTools
         private void ESResetbutton_Click(object sender, EventArgs e)
         {
             string unitType = ESsapTypecomboBox.SelectedItem.ToString();
-
+            log.InfoFormat("Reset unit type: {0}", unitType);
             if (unitType.Equals("Bare Metal"))
             {
                 ESPort.WriteToPort("rst");
@@ -1538,7 +1545,7 @@ namespace GeneralTools
         private void ESArmDisarmbutton_Click(object sender, EventArgs e)
         {
             string unitType = ESsapTypecomboBox.SelectedItem.ToString();
-
+            log.InfoFormat("Disarm unit type: {0}", unitType);
             if (unitType.Equals("Bare Metal"))
             {
                 ESPort.WriteToPort("atg");
@@ -1556,7 +1563,7 @@ namespace GeneralTools
         private void ESStorageStatusbutton_Click(object sender, EventArgs e)
         {
             string unitType = ESsapTypecomboBox.SelectedItem.ToString();
-
+            log.InfoFormat("Check {0} for unit type: {1}", ESStorageTypecomboBox.SelectedItem, unitType);
             if (unitType.Equals("Bare Metal"))
             {
                 ESPort.WriteToPort("dir");
@@ -1631,6 +1638,7 @@ namespace GeneralTools
                         List<string> localLogFiles = logFiles.Union(logFiles).ToList();
                         logFiles.Clear();
                         logFiles.AddRange(localLogFiles);
+                        logFiles.Sort();
                         int b = 1;
                     }
                     else
@@ -1651,9 +1659,8 @@ namespace GeneralTools
 
             ESStorageStatusbutton_Click(sender, e);
             Thread.Sleep(2000);
-            string selectedPath = "";
+
             selectedFolderForLogs = new FolderBrowserDialog();
-            logFiles.Sort();
 
 
             if (selectedFolderForLogs.ShowDialog() == DialogResult.OK)
@@ -1661,6 +1668,7 @@ namespace GeneralTools
                 string unitType = ESsapTypecomboBox.SelectedItem.ToString();
                 selectedStorageType = ESStorageTypecomboBox.SelectedIndex;
                 selectedUnitType = unitType;
+                log.InfoFormat("Logs Import from {0} for unit type: {1}", ESStorageTypecomboBox.SelectedItem, unitType);
                 logImportWorker.RunWorkerAsync();
             }
 
@@ -1692,6 +1700,8 @@ namespace GeneralTools
 
                         ESPort.WriteToPort("FC");
                         Thread.Sleep(3000);
+
+                        log.InfoFormat("Start log file import {0}", s.Substring(0, commaSeparator));
 
                         if (selectedUnitType.Equals("Bare Metal"))
                         {
@@ -1728,19 +1738,21 @@ namespace GeneralTools
                         tw.Close();
                         eofReached = false;
                         Thread.Sleep(1000);
+                        log.InfoFormat("End of log file import {0}", s.Substring(0, commaSeparator));
                         copiedFilePercentlabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFilePercentlabel, "0%", true });
                     }
                 }
             }
             copiedFilePercentlabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFilePercentlabel, "", true });
             copiedFileNamelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFileNamelabel, "Finished", true });
-
+            isFileImportInProgress = false;
             string message = "Files import Finished\r\n Upload to Cloud?";
             string title = "Parazero Question";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
             DialogResult result = MessageBox.Show(message, title, buttons);
             if (result == DialogResult.Yes)
             {
+                log.InfoFormat("Start logs sync with AWS");
                 logUploadToAwsWorker.RunWorkerAsync();
             }
             else
@@ -1755,6 +1767,7 @@ namespace GeneralTools
         {
             //TODO: Add Aws reachable test
             //TODO: show popup message asking permission to upload logs
+            log.InfoFormat("Selected directory to upload {0}", selectedFolderForLogs.SelectedPath);
             string[] csvFileEntries = Directory.GetFiles(selectedFolderForLogs.SelectedPath + "\\");
             await uploadFileToAwsBucket(csvFileEntries);
             string message = "Files Uploaded to Cloud";
@@ -1770,7 +1783,7 @@ namespace GeneralTools
 
         private void CloudUploadbutton_Click(object sender, EventArgs e)
         {
-            string selectedPath = "";
+            //string selectedPath = "";
             selectedFolderForLogs = new FolderBrowserDialog();
 
             if (selectedFolderForLogs.ShowDialog() == DialogResult.OK)
@@ -1779,6 +1792,163 @@ namespace GeneralTools
                 //string[] csvFileEntries = Directory.GetFiles(selectedFolderForLogs.SelectedPath + "\\");
 
                 logUploadToAwsWorker.RunWorkerAsync();
+            }
+        }
+
+        private void ClearStoragebutton_Click(object sender, EventArgs e)
+        {
+            string unitType = ESsapTypecomboBox.SelectedItem.ToString();
+
+            if (unitType.Equals("Bare Metal"))
+            {
+                ESPort.WriteToPort("fmt");
+            }
+            else if (unitType.Equals("RTOS 6.01"))
+            {
+                if (ESStorageTypecomboBox.SelectedIndex.Equals(1))
+                {
+                    ESPort.WriteToPort("fmt 1");
+                }
+                else if (ESStorageTypecomboBox.SelectedIndex.Equals(0))
+                {
+                    ESPort.WriteToPort("fmt 0");
+                }
+            }
+            else if (unitType.Equals("RTOS +6.02"))
+            {
+                if (ESStorageTypecomboBox.SelectedIndex.Equals(1))
+                {
+                    ESPort.WriteToPort("fmt 1");
+                }
+                else if (ESStorageTypecomboBox.SelectedIndex.Equals(0))
+                {
+                    ESPort.WriteToPort("fmt 0");
+                }
+            }
+        }
+
+        private void ImportConfigurationbutton_Click(object sender, EventArgs e)
+        {
+
+            SaveFileDialog localSaveDialog = new SaveFileDialog();
+            localSaveDialog.Filter = "txt file (*.txt) | *.txt | All files (*.*) | *.*";
+            localSaveDialog.FilterIndex = 2;
+
+            DialogResult localSAfeDialogResult = localSaveDialog.ShowDialog();
+            if (localSAfeDialogResult == DialogResult.OK)
+            {
+                File.Create(localSaveDialog.FileName).Dispose();
+
+                tw = new StreamWriter(localSaveDialog.FileName, true);
+
+                currentSizeImportedFile = 0;
+                isFileImportInProgress = true;
+
+                if (selectedUnitType.Equals("Bare Metal"))
+                {
+                    ESPort.WriteToPort("imp \"config.txt\"");
+                }
+                else if (selectedUnitType.Equals("RTOS 6.01"))
+                {
+                    if (selectedStorageType.Equals(1))
+                    {
+                        ESPort.WriteToPort("imp \"1:/config.txt\" 1");
+                    }
+                    else if (selectedStorageType.Equals(0))
+                    {
+                        ESPort.WriteToPort("imp \"0:/config.txt\" 0");
+                    }
+                }
+                else if (selectedUnitType.Equals("RTOS +6.02"))
+                {
+                    if (selectedStorageType.Equals(1))
+                    {
+                        ESPort.WriteToPort("imp \"1:/config.txt\" 1");
+                    }
+                    else if (selectedStorageType.Equals(0))
+                    {
+                        ESPort.WriteToPort("imp \"0:/config.txt\" 0");
+                    }
+                }
+
+                while (!eofReached)
+                {
+                    Thread.Sleep(10);
+                    //SDCardStoragelabel.Invoke(LabelToUpdateDelegate, new Object[] { copiedFilePercentlabel, ((int)(100 * (float)((currentSizeImportedFile * 1.0f) / (logSizeImportedFile * 1.0f)))).ToString() + "%", true });
+                }
+                tw.Close();
+                eofReached = false;
+                Thread.Sleep(1000);
+                isFileImportInProgress = false;
+
+                string message = "SafeAir configuration saved";
+                string title = "Parazero Message";
+                DialogResult result = MessageBox.Show(message, title);
+            }
+        }
+
+        private void LoadConfigurationbutton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog localOpenFileDialog = new OpenFileDialog();
+            localOpenFileDialog.Filter = "txt file (*.txt) | *.txt | All files (*.*) | *.*";
+            localOpenFileDialog.FilterIndex = 2;
+
+            DialogResult localDialogOpenResult = localOpenFileDialog.ShowDialog();
+
+            if (localDialogOpenResult == DialogResult.OK)
+            {
+                StreamReader fr = new StreamReader(localOpenFileDialog.FileName);
+
+                string localConfigurationFile = fr.ReadToEnd();
+                string localStringToSend = "";
+
+                while (localConfigurationFile.Contains("\u0003"))
+                {
+                    int EPXIndex = localConfigurationFile.IndexOf("\u0003");
+                    localStringToSend = localConfigurationFile.Substring(0, EPXIndex);
+                    ESPort.WriteToPort(localStringToSend);
+                    localConfigurationFile = localConfigurationFile.Substring(EPXIndex + 1);
+                }
+
+            }
+            string message = "SafeAir configuration loaded";
+            string title = "Parazero Message";
+            DialogResult result = MessageBox.Show(message, title);
+        }
+
+        private void ManualTriggerbutton_Click(object sender, EventArgs e)
+        {
+            if (selectedUnitType.Equals("Bare Metal"))
+            {
+                ESPort.WriteToPort("trg 0");
+            }
+            else if (selectedUnitType.Equals("RTOS 6.01"))
+            {
+
+                ESPort.WriteToPort("trg 0");
+            }
+            else if (selectedUnitType.Equals("RTOS +6.02"))
+            {
+
+                ESPort.WriteToPort("trg 0");
+            }
+        }
+
+        private void AutoTriggerbutton_Click(object sender, EventArgs e)
+        {
+            if (selectedUnitType.Equals("Bare Metal"))
+            {
+                ESPort.WriteToPort("trg 1");
+            }
+            else if (selectedUnitType.Equals("RTOS 6.01"))
+            {
+
+                ESPort.WriteToPort("trg 1");
+            }
+            else if (selectedUnitType.Equals("RTOS +6.02"))
+            {
+
+                ESPort.WriteToPort("trg 1");
             }
         }
     }
